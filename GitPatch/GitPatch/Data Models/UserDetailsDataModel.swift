@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 
 protocol UserDetailsDataModelDelegate: class {
-    func didReceiveAmountOfFollowers(followers: Int)
+    func didReceiveFollowers(followers: [User])
     func didReceiveAmountOfFollowing(following: Int)
     func didReceiveAmountOfStars(stars: Int)
     func didFailWithError(error: Error)
@@ -42,7 +42,7 @@ class UserDetailsDataModel {
     }
     
     func requestAmountOfFollowers(url: String) {
-        requestAmountOfData(url: url, setAmountOfData: setAmountOfFollowers)
+        requestAmountOfData(url: url, setAmountOfData: setFollowers)
     }
     
     func requestAmountOfFollowing(url: String) {
@@ -57,11 +57,19 @@ class UserDetailsDataModel {
         delegate?.didReceiveAmountOfFollowing(following: response.count)
     }
     
-    private func setAmountOfFollowers(response: [[String: Any]]) {
-        delegate?.didReceiveAmountOfFollowers(followers: response.count)
-    }
-    
     private func setAmountOfStars(response: [[String: Any]]) {
         delegate?.didReceiveAmountOfStars(stars: response.count)
+    }
+    
+    private func setFollowers(response: [[String: Any]]) {
+        var followersArray = [User]()
+        
+        for data in response {
+            if let follower = User(json: data) {
+                followersArray.append(follower)
+            }
+        }
+        
+        delegate?.didReceiveFollowers(followers: followersArray)
     }
 }

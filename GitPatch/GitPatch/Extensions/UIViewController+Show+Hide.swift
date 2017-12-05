@@ -13,7 +13,7 @@ extension UIViewController {
     
     // MARK: - Errors
     func showError() {
-        let alertController = UIAlertController(title: "Error", message: "An error occured while downloading users", preferredStyle: UIAlertControllerStyle.alert)
+        let alertController = UIAlertController(title: "Error", message: "An error occured while downloading data", preferredStyle: UIAlertControllerStyle.alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil)
         
         alertController.addAction(okAction)

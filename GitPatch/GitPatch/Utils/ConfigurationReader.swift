@@ -16,16 +16,17 @@ class ConfigurationReader {
     static let sharedInstance = ConfigurationReader()
     
     init() {
-        let styleFilePath = Bundle.main.url(forResource: "colorsfilename", withExtension: "json")
-        do {
-            let data = try Data(contentsOf: styleFilePath!)
-            let json = try JSONSerialization.jsonObject(with: data, options: [])
-            if let json = json as? [String: String] {
-                colors = json
-                return
+        if let colorsFilePath = Bundle.main.url(forResource: "languages_colors", withExtension: "json") {
+            do {
+                let data = try Data(contentsOf: colorsFilePath)
+                let json = try JSONSerialization.jsonObject(with: data, options: [])
+                if let colorsJson = json as? [String: String] {
+                    colors = colorsJson
+                    return
+                }
+            } catch {
+                print("error while loading color from JSON file")
             }
-        } catch {
-            print("error while loading color from JSON file")
         }
         colors = [:]
     }
@@ -34,6 +35,6 @@ class ConfigurationReader {
         if let color = colors[key] {
             return UIColor(rgb: color)
         }
-        return UIColor.blue
+        return .clear
     }
 }

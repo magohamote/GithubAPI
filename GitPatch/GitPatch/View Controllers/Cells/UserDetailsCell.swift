@@ -24,10 +24,14 @@ class UserDetailsCell: UITableViewCell {
     
     func config(withUser user: User, data:(repos: Int, stars: Int, followers: Int, following: Int)) {
         userImageView.sd_setImage(with: URL(string: user.avatarUrl)!, completed: nil)
+        userImageView.layer.cornerRadius = 5
+        userImageView.layer.masksToBounds = true
+        
         userDetailsView.layer.cornerRadius = 15
         userDetailsView.layer.shadowOffset = CGSize(width: 0, height: 0)
-        userDetailsView.layer.shadowOpacity = 0.1
         userDetailsView.layer.shadowRadius = 2
+        userDetailsView.layer.shadowOpacity = 0.1
+        
         reposCount.text = "\(data.repos)"
         starsCount.text = "\(data.stars)"
         followersCount.text = "\(data.followers)"

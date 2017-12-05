@@ -36,10 +36,6 @@ extension UIColor {
         return UIColor(rgb: 0x2180c2)
     }
     
-    static var navyBlueTranslucent: UIColor {
-        return UIColor(rgb: 0x4592c5)
-    }
-    
     static var backgroundGray: UIColor {
         return UIColor(rgb: 0xeeeeee)
     }

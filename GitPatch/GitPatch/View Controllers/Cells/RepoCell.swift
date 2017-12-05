@@ -27,15 +27,18 @@ class RepoCell: UITableViewCell {
     func config(withRepo repo: Repo) {
         cellFloatingView.layer.cornerRadius = 15
         cellFloatingView.layer.shadowOffset = CGSize(width: 0, height: 0)
-        cellFloatingView.layer.shadowOpacity = 0.1
         cellFloatingView.layer.shadowRadius = 2
+        cellFloatingView.layer.shadowOpacity = 0.1
+        
         nameLabel.text = repo.name
+        nameLabel.textColor = .navyBlue
         languageLabel.text = repo.language
         repoDescriptionLabel.text = repo.repoDescription
 //        starsCountLabel.text = "\(repo.stargazersCount)"
         forksCountLabel.text = "\(repo.forksCount)"
-        configDot(withLanguage: repo.language)
         updatedAtLabel.text = "Updated on \(configDate(withString: repo.updatedAt))"
+        
+        configDot(withLanguage: repo.language)
     }
     
     func configDate(withString dateString: String) -> String {
@@ -47,7 +50,10 @@ class RepoCell: UITableViewCell {
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
         dateFormatter.locale = Locale(identifier: "en_US")
-        return dateFormatter.string(from: date!)
+        if let date = date {
+            return dateFormatter.string(from: date)
+        }
+        return "unknown"
     }
     
     func configDot(withLanguage language: String) {

@@ -15,16 +15,16 @@ class UserViewController: UIViewController {
     
     var user: User?
     
+    private var userData = (repos: 0, stars: 0, followers: 0, following: 0)
+    private var followersArray = [User]()
     private let repoDataSource = RepoDataModel()
     private let userDetailsDataSource = UserDetailsDataModel()
+    private var storedOffsets = [Int: CGFloat]()
     private var reposArray = [Repo](){
         didSet {
             tableView.reloadData()
         }
     }
-    
-    private var userData = (repos: 0, stars: 0, followers: 0, following: 0)
-    private var userDataUpdated = (repos: false, stars: false, followers: false, following: false)
     
     class var identifier: String {
         return String(describing: self)
@@ -59,15 +59,15 @@ class UserViewController: UIViewController {
 
 extension UserViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case 0:
-            return 1
-        default:
+        case 2:
             return reposArray.count
+        default:
+            return 1
         }
     }
     
@@ -78,18 +78,36 @@ extension UserViewController: UITableViewDataSource {
                 cell.config(withUser: user, data: userData)
                 return cell
             }
-        default:
+        case 1:
+            if let cell = tableView.dequeueReusableCell(withIdentifier: FollowerCollectionCell.identifier) as? FollowerCollectionCell {
+                return cell
+            }
+        case 2:
             if let cell = tableView.dequeueReusableCell(withIdentifier: RepoCell.identifier) as? RepoCell {
                 cell.config(withRepo: reposArray[indexPath.row])
                 return cell
             }
+        default:
+            return UITableViewCell()
         }
-        
         return UITableViewCell()
     }
 }
 
 extension UserViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.section == 1 {
+            guard let tableViewCell = cell as? FollowerCollectionCell else { return }
+            tableViewCell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, forRow: indexPath.row)
+            tableViewCell.collectionViewOffset = storedOffsets[indexPath.row] ?? 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let tableViewCell = cell as? FollowerCollectionCell else { return }
+        storedOffsets[indexPath.row] = tableViewCell.collectionViewOffset
+    }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
@@ -102,18 +120,47 @@ extension UserViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         switch section {
-        case 0:
-            return UITableViewHeaderFooterView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        case 1:
+            return bigHeader(withTitle: "Followers")
+        case 2:
+            return bigHeader(withTitle: "Repositories")
         default:
-            let header = UITableViewHeaderFooterView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 70))
-            header.contentView.backgroundColor = .backgroundGray
-            let labelHeight:CGFloat = 34
-            let headerLabel = UILabel(frame: CGRect(x: 20, y: header.frame.height/2 - labelHeight/2 - 5 , width: self.view.frame.width - 40, height: labelHeight))
-            headerLabel.text = "Repositories"
-            headerLabel.font = UIFont(name: "Roboto-Medium", size: 25)
-            headerLabel.textColor = .anthracite
-            header.addSubview(headerLabel)
-            return header
+            return UITableViewHeaderFooterView()
+        }
+    }
+    
+    func bigHeader(withTitle title: String) -> UITableViewHeaderFooterView {
+        let header = UITableViewHeaderFooterView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 70))
+        header.contentView.backgroundColor = .backgroundGray
+        let labelHeight:CGFloat = 34
+        let headerLabel = UILabel(frame: CGRect(x: 20, y: header.frame.height/2 - labelHeight/2 - 5 , width: view.frame.width - 40, height: labelHeight))
+        headerLabel.text = title
+        headerLabel.font = UIFont(name: "Roboto-Medium", size: 25)
+        headerLabel.textColor = .anthracite
+        header.addSubview(headerLabel)
+        return header
+    }
+}
+
+extension UserViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return followersArray.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserCollectionCell.identifier, for: indexPath) as? UserCollectionCell {
+            cell.config(withUser: followersArray[indexPath.row])
+            return cell
+        }
+        return UICollectionViewCell()
+    }
+}
+
+extension UserViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let vc = storyboard?.instantiateViewController(withIdentifier: UserViewController.identifier) as? UserViewController {
+            vc.user = followersArray[indexPath.row]
+            navigationController?.pushViewController(vc, animated: true)
         }
     }
 }
@@ -122,11 +169,7 @@ extension UserViewController: RepoDataModelDelegate {
     func didReceiveDataUpdate(repos: [Repo]) {
         reposArray = repos
         userData.repos = reposArray.count
-        if userDataUpdated.stars && userDataUpdated.followers && userDataUpdated.following {
-            updateUserCell()
-        } else {
-            userDataUpdated.repos = true
-        }
+        updateUserCell()
     }
     
     func didFailDataUpdateWithError(error: Error) {
@@ -137,34 +180,31 @@ extension UserViewController: RepoDataModelDelegate {
 extension UserViewController: UserDetailsDataModelDelegate {
     func didReceiveAmountOfFollowing(following: Int) {
         userData.following = following
-        if userDataUpdated.repos && userDataUpdated.stars && userDataUpdated.followers {
-            updateUserCell()
-        } else {
-            userDataUpdated.following = true
-        }
+        updateUserCell()
     }
     
-    func didReceiveAmountOfFollowers(followers: Int) {
-        userData.followers = followers
-        if userDataUpdated.repos && userDataUpdated.stars && userDataUpdated.followers {
-            updateUserCell()
-        } else {
-            userDataUpdated.followers = true
-        }
+    func didReceiveFollowers(followers: [User]) {
+        userData.followers = followers.count
+        followersArray = followers
+        updateFollowersCollection()
+        updateUserCell()
     }
     
     func didReceiveAmountOfStars(stars: Int) {
         userData.stars = stars
-        if userDataUpdated.repos && userDataUpdated.followers && userDataUpdated.following {
-            updateUserCell()
-        } else {
-            userDataUpdated.stars = true
-        }
+        updateUserCell()
     }
     
     func updateUserCell() {
         tableView.beginUpdates()
         let indexPath = IndexPath(item: 0, section: 0)
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+        tableView.endUpdates()
+    }
+    
+    func updateFollowersCollection() {
+        tableView.beginUpdates()
+        let indexPath = IndexPath(item: 0, section: 1)
         tableView.reloadRows(at: [indexPath], with: .automatic)
         tableView.endUpdates()
     }
