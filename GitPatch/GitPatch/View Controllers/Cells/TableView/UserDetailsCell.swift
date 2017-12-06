@@ -40,9 +40,9 @@ class UserDetailsCell: UITableViewCell {
     
     func configUserDetails(withUser user: User) {
         if let repos = user.repos, let followers = user.followers, let following = user.following {
-            reposCount.text = "\(repos)"
-            followersCount.text = "\(followers)"
-            followingCounts.text = "\(following)"
+            reposCount.text = repos.formattedWithSeparator
+            followersCount.text = followers.formattedWithSeparator
+            followingCounts.text = following.formattedWithSeparator
         }
         
         if let location = user.location {

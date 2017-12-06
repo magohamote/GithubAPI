@@ -34,8 +34,8 @@ class RepoCell: UITableViewCell {
         nameLabel.textColor = .navyBlue
         languageLabel.text = repo.language
         repoDescriptionLabel.text = repo.repoDescription
-        starsCountLabel.text = "\(repo.stargazersCount)"
-        forksCountLabel.text = "\(repo.forksCount)"
+        starsCountLabel.text = repo.stargazersCount.formattedWithSeparator
+        forksCountLabel.text = repo.forksCount.formattedWithSeparator
         updatedAtLabel.text = "Updated on \(configDate(withString: repo.updatedAt))"
         
         configDot(withLanguage: repo.language)
