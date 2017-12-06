@@ -10,7 +10,7 @@ import XCTest
 
 class GitPatchUITests: XCTestCase {
     
-    var app:XCUIApplication? = nil
+    var app:XCUIApplication!
     
     override func setUp() {
         super.setUp()
@@ -24,12 +24,19 @@ class GitPatchUITests: XCTestCase {
         super.tearDown()
     }
     
+    func testShowUsersList() {
+        showUser()
+        let navBar = app.navigationBars["Gitpatch"]
+        XCTAssertTrue(navBar.exists)
+        let upArrowButton = navBar.buttons["up arrow"]
+        XCTAssertTrue(upArrowButton.exists)
+        upArrowButton.tap()
+        app.swipeUp()
+        XCTAssertTrue(navBar.exists)
+    }
+    
     func testInfinitScrollUser() {
-        guard let app = app else {
-            XCTFail()
-            return
-        }
-        
+        showUser()
         let usersTable = app.tables["usersTable"]
         XCTAssertNotNil(usersTable)
         usersTable.swipeUp()
@@ -38,11 +45,7 @@ class GitPatchUITests: XCTestCase {
     }
     
     func testUserDetails() {
-        guard let app = app else {
-            XCTFail()
-            return
-        }
-        
+        showUser()
         let usersTable = app.tables["usersTable"]
         XCTAssertNotNil(usersTable)
         usersTable.cells.staticTexts["mojombo"].tap()
@@ -50,12 +53,35 @@ class GitPatchUITests: XCTestCase {
         let userDetailsTable = app.tables["userDetailsTable"]
         XCTAssertNotNil(userDetailsTable)
         
-        let userDetailCell = userDetailsTable.cells.staticTexts["Stars"]
-        XCTAssertNotNil(userDetailCell)
+        let userDetailCell = userDetailsTable.cells.staticTexts["Following"]
+        XCTAssertTrue(userDetailCell.waitForExistence(timeout: 10))
         
-        let reposDetailCell = userDetailsTable.cells.staticTexts["tokuda109"]
-        XCTAssertNotNil(reposDetailCell)
+        let followersCell = userDetailsTable.cells.staticTexts["tokuda109"]
+        XCTAssertTrue(followersCell.waitForExistence(timeout: 10))
+        followersCell.swipeLeft()
         
+        let reposCell = userDetailsTable.cells.staticTexts["asteroids"]
+        XCTAssertTrue(reposCell.waitForExistence(timeout: 10))
+        reposCell.swipeUp()
+    }
+    
+    func testUserReccurency() {
+        showUser()
+        let usersTable = app.tables["usersTable"]
+        XCTAssertNotNil(usersTable)
+        usersTable.cells.staticTexts["mojombo"].tap()
         
+        let userDetailsTable = app.tables["userDetailsTable"]
+        XCTAssertNotNil(userDetailsTable)
+        
+        let followersCell = userDetailsTable.cells.staticTexts["tokuda109"]
+        XCTAssertTrue(followersCell.waitForExistence(timeout: 10))
+        followersCell.tap()
+    }
+    
+    func showUser() {
+        let showUsersButton = app.buttons["showUsersButton"]
+        XCTAssertNotNil(showUsersButton)
+        showUsersButton.tap()
     }
 }
