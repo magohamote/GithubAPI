@@ -6,7 +6,6 @@
 //  Copyright © 2017 Rolland Cédric. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 class UserDetailsCell: UITableViewCell {
@@ -23,7 +22,9 @@ class UserDetailsCell: UITableViewCell {
     }
     
     func config(withUser user: User, data:(repos: Int, stars: Int, followers: Int, following: Int)) {
-        userImageView.sd_setImage(with: URL(string: user.avatarUrl)!, completed: nil)
+        if let avatarUrl = URL(string: user.avatarUrl) {
+            userImageView.sd_setImage(with: avatarUrl, completed: nil)
+        }
         userImageView.layer.cornerRadius = 5
         userImageView.layer.masksToBounds = true
         

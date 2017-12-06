@@ -6,7 +6,6 @@
 //  Copyright © 2017 Rolland Cédric. All rights reserved.
 //
 
-import Foundation
 import UIKit
 import SDWebImage
 
@@ -21,7 +20,12 @@ class UserCell: UITableViewCell {
     }
     
     func config(withUser user: User) {
-        userImageView.sd_setImage(with: URL(string: user.avatarUrl)!, completed: nil)
+        let placeholder = UIImage(named: "placeholder")?.withRenderingMode(.alwaysTemplate)
+        userImageView.tintColor = .navyBlue
+        userImageView.image = placeholder
+        if let avatarUrl = URL(string: user.avatarUrl) {
+            userImageView.sd_setImage(with: avatarUrl, completed: nil)
+        }
         userImageView.layer.cornerRadius = userImageView.frame.height/2
         userImageView.layer.masksToBounds = true
         usernameLabel.text = user.login

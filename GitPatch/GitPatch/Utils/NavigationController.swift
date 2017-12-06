@@ -15,6 +15,11 @@ class NavigationController: UINavigationController, UIViewControllerTransitionin
         super.viewDidLoad()
         
         navigationBar.barTintColor = .navyBlue
+        navigationBar.prefersLargeTitles = true
+        navigationBar.titleTextAttributes = [
+            NSAttributedStringKey.foregroundColor : UIColor.white,
+            NSAttributedStringKey.font : UIFont(name: "Roboto-Medium", size: 17)!
+        ]
         navigationBar.largeTitleTextAttributes = [
             NSAttributedStringKey.foregroundColor : UIColor.white,
             NSAttributedStringKey.font : UIFont(name: "Roboto-Medium", size: 30)!

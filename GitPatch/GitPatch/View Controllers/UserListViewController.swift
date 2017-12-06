@@ -12,6 +12,7 @@ import UIKit
 class UserListViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
     
+    private var lastUserIndex = 0
     private var storedOffsets = [Int: CGFloat]()
     private let dataSource = UserDataModel()
     private var usersArray = [User]() {
@@ -31,17 +32,18 @@ class UserListViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorColor = .clear
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        showLoadingView()
-        downloadData()
-    }
-    
-    func downloadData() {
+        
         if Reachability.isConnected() {
-            dataSource.requestData(url: "https://api.github.com/users?since=", since: 0)
+            showLoadingView()
+        }
+        downloadData(lastUserIndex: lastUserIndex)
+    }
+    
+    func downloadData(lastUserIndex: Int) {
+        if Reachability.isConnected() {
+            dataSource.requestData(url: "https://api.github.com/users?since=", since: lastUserIndex)
+            self.lastUserIndex += 30
+            print("downloading")
         } else if let users = dataSource.loadUsers() {
             usersArray = users
             tableView.reloadData()
@@ -77,6 +79,13 @@ extension UserListViewController: UITableViewDelegate {
         if let vc = storyboard?.instantiateViewController(withIdentifier: UserViewController.identifier) as? UserViewController {
             vc.user = usersArray[indexPath.row]
             navigationController?.pushViewController(vc, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == usersArray.count - 5 {
+            downloadData(lastUserIndex: lastUserIndex)
         }
     }
 }
@@ -84,8 +93,8 @@ extension UserListViewController: UITableViewDelegate {
 extension UserListViewController: UserDataModelDelegate {
     
     func didReceiveDataUpdate(users: [User]) {
-        usersArray = users
-        dataSource.saveUsers(users: users)
+        usersArray.append(contentsOf: users)
+        dataSource.saveUsers(users: usersArray)
         hideLoadingView(tableView: tableView)
     }
     

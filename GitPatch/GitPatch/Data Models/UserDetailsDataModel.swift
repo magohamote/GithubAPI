@@ -33,6 +33,7 @@ class UserDetailsDataModel {
             
             guard let responseJSON = response.result.value as? [[String: Any]] else {
                 os_log("Invalid data received from the service", log: OSLog.default, type: .debug)
+                os_log("data: %@", log: OSLog.default, type: .debug, response.result.value.debugDescription)
                 self.delegate?.didFailWithError(error: FormatError.badFormatError)
                 return
             }

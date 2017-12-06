@@ -6,7 +6,6 @@
 //  Copyright © 2017 Rolland Cédric. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 class UserCollectionCell: UICollectionViewCell {
@@ -20,7 +19,9 @@ class UserCollectionCell: UICollectionViewCell {
     }
     
     func config(withUser user: User) {
-        userImageView.sd_setImage(with: URL(string: user.avatarUrl)!, completed: nil)
+        if let avatarUrl = URL(string: user.avatarUrl) {
+            userImageView.sd_setImage(with: avatarUrl, completed: nil)
+        }
         userImageView.layer.masksToBounds = true
         userImageView.layer.cornerRadius = userImageView.frame.height/2
         userImageView.layer.shadowOffset = CGSize(width: 0, height: 0)

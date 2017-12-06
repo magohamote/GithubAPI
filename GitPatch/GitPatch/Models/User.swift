@@ -32,15 +32,18 @@ class User: NSObject, NSCoding {
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
-        let login = aDecoder.decodeObject(forKey: Keys.login) as! String
-        let id = aDecoder.decodeInteger(forKey: Keys.id)
-        let avatarUrl = aDecoder.decodeObject(forKey: Keys.avatarUrl) as! String
-        let followersUrl = aDecoder.decodeObject(forKey: Keys.followersUrl) as! String
-        let followingUrl = aDecoder.decodeObject(forKey: Keys.followingUrl) as! String
-        let starredUrl = aDecoder.decodeObject(forKey: Keys.starredUrl) as! String
-        let reposUrl = aDecoder.decodeObject(forKey: Keys.reposUrl) as! String
-
-        self.init(login: login, id: id, avatarUrl: avatarUrl, followersUrl: followersUrl, followingUrl: followingUrl, starredUrl: starredUrl, reposUrl: reposUrl)
+        if let login = aDecoder.decodeObject(forKey: Keys.login) as? String,
+            let avatarUrl = aDecoder.decodeObject(forKey: Keys.avatarUrl) as? String,
+            let followersUrl = aDecoder.decodeObject(forKey: Keys.followersUrl) as? String,
+            let followingUrl = aDecoder.decodeObject(forKey: Keys.followingUrl) as? String,
+            let starredUrl = aDecoder.decodeObject(forKey: Keys.starredUrl) as? String,
+            let reposUrl = aDecoder.decodeObject(forKey: Keys.reposUrl) as? String {
+                    
+            let id = aDecoder.decodeInteger(forKey: Keys.id)
+            self.init(login: login, id: id, avatarUrl: avatarUrl, followersUrl: followersUrl, followingUrl: followingUrl, starredUrl: starredUrl, reposUrl: reposUrl)
+        }
+        
+        return nil
     }
     
     init?(login: String, id: Int, avatarUrl: String, followersUrl: String, followingUrl: String, starredUrl: String, reposUrl: String) {

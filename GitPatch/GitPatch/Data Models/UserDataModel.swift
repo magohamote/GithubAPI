@@ -31,6 +31,7 @@ class UserDataModel {
             
             guard let responseJSON = response.result.value as? [[String: Any]] else {
                 os_log("Invalid data received from the service", log: OSLog.default, type: .debug)
+                os_log("data: %@", log: OSLog.default, type: .debug, response.result.value.debugDescription)
                 self.delegate?.didFailDataUpdateWithError(error: FormatError.badFormatError)
                 return
             }
@@ -52,7 +53,12 @@ class UserDataModel {
     }
     
     func saveUsers(users: [User]) {
-        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(users, toFile: User.ArchiveURL.path)
+        var isSuccessfulSave = false
+        if users.count > 100 { // save only up to 100 users for offline state
+            isSuccessfulSave = NSKeyedArchiver.archiveRootObject(Array(users[0..<100]), toFile: User.ArchiveURL.path)
+        } else {
+            isSuccessfulSave = NSKeyedArchiver.archiveRootObject(users, toFile: User.ArchiveURL.path)
+        }
         if isSuccessfulSave {
             os_log("Users successfully saved.", log: OSLog.default, type: .debug)
         } else {

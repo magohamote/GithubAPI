@@ -22,24 +22,28 @@ extension UIViewController {
     
     // MARK: - Loading
     func showLoadingView() {
-        let loadingView = UIView(frame: self.view.bounds)
+        let loadingView = UIView(frame: view.bounds)
         loadingView.tag = 42
-        loadingView.backgroundColor = .black
-        loadingView.alpha = 0.7
+        loadingView.backgroundColor = .white
         
         let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
         loadingIndicator.center = loadingView.center
+        loadingIndicator.color = .navyBlue
         loadingIndicator.isHidden = false
         loadingIndicator.startAnimating()
         
         loadingView.addSubview(loadingIndicator)
         
-        self.view.addSubview(loadingView)
+        view.addSubview(loadingView)
     }
     
     func hideLoadingView(tableView: UITableView) {
         tableView.separatorColor = .backgroundGray
         tableView.refreshControl?.endRefreshing()
-        self.view.viewWithTag(42)?.removeFromSuperview()
+        UIView.animate(withDuration: 0.25, animations: {
+            self.view.viewWithTag(42)?.alpha = 0
+        }, completion: { _ in
+            self.view.viewWithTag(42)?.removeFromSuperview()
+        })
     }
 }

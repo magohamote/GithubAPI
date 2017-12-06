@@ -16,13 +16,15 @@ class UserViewController: UIViewController {
     var user: User?
     
     private var userData = (repos: 0, stars: 0, followers: 0, following: 0)
+    private var isDownloadingRepos = false
+    private var isDownloadingFollowers = false
     private var followersArray = [User]()
     private let repoDataSource = RepoDataModel()
     private let userDetailsDataSource = UserDetailsDataModel()
     private var storedOffsets = [Int: CGFloat]()
     private var reposArray = [Repo](){
         didSet {
-            tableView.reloadData()
+            updateSection(section: 2)
         }
     }
     
@@ -39,7 +41,9 @@ class UserViewController: UIViewController {
         
         title = user.login
         setDs()
-        downloadData(withUser: user)
+        if Reachability.isConnected() {
+            downloadData(withUser: user)
+        }
     }
     
     func setDs() {
@@ -50,10 +54,20 @@ class UserViewController: UIViewController {
     }
     
     func downloadData(withUser user: User) {
+        isDownloadingRepos = true
+        isDownloadingFollowers = true
         repoDataSource.requestData(url: user.reposUrl)
         userDetailsDataSource.requestAmountOfFollowers(url: user.followersUrl)
         userDetailsDataSource.requestAmountOfStars(url: user.starredUrl.replacingOccurrences(of: "{/owner}{/repo}", with: ""))
         userDetailsDataSource.requestAmountOfFollowing(url: user.followingUrl.replacingOccurrences(of: "{/other_user}", with: ""))
+    }
+    
+    func updateSection(section: Int) {
+        UIView.performWithoutAnimation {
+            self.tableView.beginUpdates()
+            self.tableView.reloadSections(IndexSet(integer: section), with: .automatic)
+            self.tableView.endUpdates()
+        }
     }
 }
 
@@ -65,6 +79,9 @@ extension UserViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 2:
+            if reposArray.count == 0 {
+                return 1
+            }
             return reposArray.count
         default:
             return 1
@@ -79,13 +96,41 @@ extension UserViewController: UITableViewDataSource {
                 return cell
             }
         case 1:
-            if let cell = tableView.dequeueReusableCell(withIdentifier: FollowerCollectionCell.identifier) as? FollowerCollectionCell {
-                return cell
+            if followersArray.count == 0 {
+                if Reachability.isConnected() && isDownloadingFollowers {
+                    if let cell = tableView.dequeueReusableCell(withIdentifier: LoadingCell.identifier) as? LoadingCell {
+                        cell.config()
+                        return cell
+                    }
+                } else {
+                    if let cell = tableView.dequeueReusableCell(withIdentifier: NoDataCell.identifier) as? NoDataCell, let username = user?.login {
+                        cell.config(withUsername: username, dataType: "follower")
+                        return cell
+                    }
+                }
+            } else {
+                if let cell = tableView.dequeueReusableCell(withIdentifier: FollowerCollectionCell.identifier) as? FollowerCollectionCell {
+                    return cell
+                }
             }
         case 2:
-            if let cell = tableView.dequeueReusableCell(withIdentifier: RepoCell.identifier) as? RepoCell {
-                cell.config(withRepo: reposArray[indexPath.row])
-                return cell
+            if reposArray.count == 0 {
+                if Reachability.isConnected() && isDownloadingRepos {
+                    if let cell = tableView.dequeueReusableCell(withIdentifier: LoadingCell.identifier) as? LoadingCell {
+                        cell.config()
+                        return cell
+                    }
+                } else {
+                    if let cell = tableView.dequeueReusableCell(withIdentifier: NoDataCell.identifier) as? NoDataCell, let username = user?.login {
+                        cell.config(withUsername: username, dataType: "repository")
+                        return cell
+                    }
+                }
+            } else {
+                if let cell = tableView.dequeueReusableCell(withIdentifier: RepoCell.identifier) as? RepoCell {
+                    cell.config(withRepo: reposArray[indexPath.row])
+                    return cell
+                }
             }
         default:
             return UITableViewCell()
@@ -167,12 +212,14 @@ extension UserViewController: UICollectionViewDelegate {
 
 extension UserViewController: RepoDataModelDelegate {
     func didReceiveDataUpdate(repos: [Repo]) {
+        isDownloadingRepos = false
         reposArray = repos
         userData.repos = reposArray.count
-        updateUserCell()
+        updateSection(section: 0)
     }
     
     func didFailDataUpdateWithError(error: Error) {
+        isDownloadingRepos = false
         showError()
     }
 }
@@ -180,36 +227,24 @@ extension UserViewController: RepoDataModelDelegate {
 extension UserViewController: UserDetailsDataModelDelegate {
     func didReceiveAmountOfFollowing(following: Int) {
         userData.following = following
-        updateUserCell()
+        updateSection(section: 0)
     }
     
     func didReceiveFollowers(followers: [User]) {
+        isDownloadingFollowers = false
         userData.followers = followers.count
         followersArray = followers
-        updateFollowersCollection()
-        updateUserCell()
+        updateSection(section: 1)
+        updateSection(section: 0)
     }
     
     func didReceiveAmountOfStars(stars: Int) {
         userData.stars = stars
-        updateUserCell()
-    }
-    
-    func updateUserCell() {
-        tableView.beginUpdates()
-        let indexPath = IndexPath(item: 0, section: 0)
-        tableView.reloadRows(at: [indexPath], with: .automatic)
-        tableView.endUpdates()
-    }
-    
-    func updateFollowersCollection() {
-        tableView.beginUpdates()
-        let indexPath = IndexPath(item: 0, section: 1)
-        tableView.reloadRows(at: [indexPath], with: .automatic)
-        tableView.endUpdates()
+        updateSection(section: 0)
     }
     
     func didFailWithError(error: Error) {
+        isDownloadingFollowers = false
         showError()
     }
 }

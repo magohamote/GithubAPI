@@ -37,6 +37,6 @@ extension UIColor {
     }
     
     static var backgroundGray: UIColor {
-        return UIColor(rgb: 0xeeeeee)
+        return UIColor(rgb: 0xf2f2f2)
     }
 }
