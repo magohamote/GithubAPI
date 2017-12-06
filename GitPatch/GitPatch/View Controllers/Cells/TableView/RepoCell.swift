@@ -15,13 +15,11 @@ class RepoCell: UITableViewCell {
     @IBOutlet var repoDescriptionLabel: UILabel!
     @IBOutlet var languageLabel: UILabel!
     @IBOutlet var languageDotView: UIView!
-//    @IBOutlet var starsCountLabel: UILabel!
+    @IBOutlet var starsCountLabel: UILabel!
     @IBOutlet var forksCountLabel: UILabel!
     @IBOutlet var updatedAtLabel: UILabel!
-    
-    class var identifier: String {
-        return String(describing: self)
-    }
+    @IBOutlet var forkImageView: UIImageView!
+    @IBOutlet var starImageView: UIImageView!
     
     func config(withRepo repo: Repo) {
         cellFloatingView.layer.cornerRadius = 15
@@ -29,11 +27,14 @@ class RepoCell: UITableViewCell {
         cellFloatingView.layer.shadowRadius = 2
         cellFloatingView.layer.shadowOpacity = 0.1
         
+        forkImageView.rendering(withColor: .anthracite, imageName: "fork")
+        starImageView.rendering(withColor: .anthracite, imageName: "star")
+        
         nameLabel.text = repo.name
         nameLabel.textColor = .navyBlue
         languageLabel.text = repo.language
         repoDescriptionLabel.text = repo.repoDescription
-//        starsCountLabel.text = "\(repo.stargazersCount)"
+        starsCountLabel.text = "\(repo.stargazersCount)"
         forksCountLabel.text = "\(repo.forksCount)"
         updatedAtLabel.text = "Updated on \(configDate(withString: repo.updatedAt))"
         

@@ -11,6 +11,7 @@ import UIKit
 
 class UserListViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
+    @IBOutlet var noDataView: UIView!
     
     private var lastUserIndex = 0
     private var storedOffsets = [Int: CGFloat]()
@@ -21,10 +22,6 @@ class UserListViewController: UIViewController {
         }
     }
     
-    class var identifier: String {
-        return String(describing: self)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Gitpatch"
@@ -32,6 +29,9 @@ class UserListViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorColor = .clear
+        
+        let pop = UIBarButtonItem(image: UIImage(named: "up-arrow"), style: .plain, target: self, action: #selector(pop(_:)))
+        navigationItem.rightBarButtonItem = pop
         
         if Reachability.isConnected() {
             showLoadingView()
@@ -41,16 +41,26 @@ class UserListViewController: UIViewController {
     
     func downloadData(lastUserIndex: Int) {
         if Reachability.isConnected() {
-            dataSource.requestData(url: "https://api.github.com/users?since=", since: lastUserIndex)
+            tableView.alpha = 1
+            dataSource.requestUserList(url: "https://api.github.com/users?since=", since: lastUserIndex)
             self.lastUserIndex += 30
             print("downloading")
         } else if let users = dataSource.loadUsers() {
+            tableView.alpha = 1
             usersArray = users
-            tableView.reloadData()
+            if usersArray.count == 0 {
+                tableView.alpha = 0
+            } else {
+                tableView.reloadData()
+            }
             hideLoadingView(tableView: tableView)
         } else {
-            // TODO: Handle no data and offline message
+            tableView.alpha = 0
         }
+    }
+    
+    @objc func pop(_ sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
     }
 }
 
@@ -84,7 +94,7 @@ extension UserListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == usersArray.count - 5 {
+        if indexPath.row == usersArray.count - 5 && Reachability.isConnected() {
             downloadData(lastUserIndex: lastUserIndex)
         }
     }
@@ -101,5 +111,10 @@ extension UserListViewController: UserDataModelDelegate {
     func didFailDataUpdateWithError(error: Error) {
         hideLoadingView(tableView: tableView)
         showError()
+        if usersArray.count == 0 {
+            tableView.alpha = 0
+        } else {
+            tableView.alpha = 1
+        }
     }
 }

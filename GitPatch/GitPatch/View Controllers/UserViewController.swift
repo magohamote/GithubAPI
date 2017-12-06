@@ -15,7 +15,7 @@ class UserViewController: UIViewController {
     
     var user: User?
     
-    private var userData = (repos: 0, stars: 0, followers: 0, following: 0)
+    private var userDetails: User?
     private var isDownloadingRepos = false
     private var isDownloadingFollowers = false
     private var followersArray = [User]()
@@ -28,12 +28,9 @@ class UserViewController: UIViewController {
         }
     }
     
-    class var identifier: String {
-        return String(describing: self)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         guard let user = user else {
             showError()
             return
@@ -57,9 +54,8 @@ class UserViewController: UIViewController {
         isDownloadingRepos = true
         isDownloadingFollowers = true
         repoDataSource.requestData(url: user.reposUrl)
-        userDetailsDataSource.requestAmountOfFollowers(url: user.followersUrl)
-        userDetailsDataSource.requestAmountOfStars(url: user.starredUrl.replacingOccurrences(of: "{/owner}{/repo}", with: ""))
-        userDetailsDataSource.requestAmountOfFollowing(url: user.followingUrl.replacingOccurrences(of: "{/other_user}", with: ""))
+        userDetailsDataSource.requestUserDetails(url: user.url)
+        userDetailsDataSource.requestUsersFollowers(url: user.followersUrl)
     }
     
     func updateSection(section: Int) {
@@ -91,8 +87,8 @@ extension UserViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            if let cell = tableView.dequeueReusableCell(withIdentifier: UserDetailsCell.identifier) as? UserDetailsCell, let user = user {
-                cell.config(withUser: user, data: userData)
+            if let cell = tableView.dequeueReusableCell(withIdentifier: UserDetailsCell.identifier) as? UserDetailsCell, let imageUrl = user?.avatarUrl {
+                cell.config(withUser: userDetails, imageUrl: imageUrl)
                 return cell
             }
         case 1:
@@ -214,7 +210,6 @@ extension UserViewController: RepoDataModelDelegate {
     func didReceiveDataUpdate(repos: [Repo]) {
         isDownloadingRepos = false
         reposArray = repos
-        userData.repos = reposArray.count
         updateSection(section: 0)
     }
     
@@ -225,21 +220,14 @@ extension UserViewController: RepoDataModelDelegate {
 }
 
 extension UserViewController: UserDetailsDataModelDelegate {
-    func didReceiveAmountOfFollowing(following: Int) {
-        userData.following = following
-        updateSection(section: 0)
-    }
-    
-    func didReceiveFollowers(followers: [User]) {
+    func didReceiveUsersFollowers(followers: [User]) {
         isDownloadingFollowers = false
-        userData.followers = followers.count
         followersArray = followers
         updateSection(section: 1)
-        updateSection(section: 0)
     }
     
-    func didReceiveAmountOfStars(stars: Int) {
-        userData.stars = stars
+    func didReceiveUserDetails(user: User) {
+        self.userDetails = user
         updateSection(section: 0)
     }
     

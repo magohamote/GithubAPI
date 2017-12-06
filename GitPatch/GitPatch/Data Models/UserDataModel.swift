@@ -18,7 +18,7 @@ class UserDataModel {
     
     weak var delegate: UserDataModelDelegate?
     
-    func requestData(url: String, since: Int) {
+    func requestUserList(url: String, since: Int) {
         Alamofire.request("\(url)\(since)").responseJSON { response in
             
             guard response.result.isSuccess else {

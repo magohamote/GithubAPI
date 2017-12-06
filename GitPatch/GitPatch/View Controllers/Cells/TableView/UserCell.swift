@@ -15,14 +15,8 @@ class UserCell: UITableViewCell {
     @IBOutlet var usernameLabel: UILabel!
     @IBOutlet var rightArrowImageView: UIImageView!
     
-    class var identifier: String {
-        return String(describing: self)
-    }
-    
     func config(withUser user: User) {
-        let placeholder = UIImage(named: "placeholder")?.withRenderingMode(.alwaysTemplate)
-        userImageView.tintColor = .navyBlue
-        userImageView.image = placeholder
+        userImageView.rendering(withColor: .navyBlue, imageName: "placeholder")
         if let avatarUrl = URL(string: user.avatarUrl) {
             userImageView.sd_setImage(with: avatarUrl, completed: nil)
         }
@@ -30,7 +24,6 @@ class UserCell: UITableViewCell {
         userImageView.layer.masksToBounds = true
         usernameLabel.text = user.login
         usernameLabel.textColor = .anthracite
-        rightArrowImageView.image = rightArrowImageView.image?.withRenderingMode(.alwaysTemplate)
-        rightArrowImageView.tintColor = .navyBlue
+        rightArrowImageView.rendering(withColor: .navyBlue, imageName: "right-arrow")
     }
 }

@@ -13,16 +13,13 @@ class UserDetailsCell: UITableViewCell {
     @IBOutlet var userDetailsView: UIView!
     @IBOutlet var userImageView: UIImageView!
     @IBOutlet var reposCount: UILabel!
-    @IBOutlet var starsCount: UILabel!
     @IBOutlet var followersCount: UILabel!
     @IBOutlet var followingCounts: UILabel!
+    @IBOutlet var locationIconImageView: UIImageView!
+    @IBOutlet var locationLabel: UILabel!
     
-    class var identifier: String {
-        return String(describing: self)
-    }
-    
-    func config(withUser user: User, data:(repos: Int, stars: Int, followers: Int, following: Int)) {
-        if let avatarUrl = URL(string: user.avatarUrl) {
+    func config(withUser user: User?, imageUrl: String) {
+        if let avatarUrl = URL(string: imageUrl) {
             userImageView.sd_setImage(with: avatarUrl, completed: nil)
         }
         userImageView.layer.cornerRadius = 5
@@ -33,9 +30,29 @@ class UserDetailsCell: UITableViewCell {
         userDetailsView.layer.shadowRadius = 2
         userDetailsView.layer.shadowOpacity = 0.1
         
-        reposCount.text = "\(data.repos)"
-        starsCount.text = "\(data.stars)"
-        followersCount.text = "\(data.followers)"
-        followingCounts.text = "\(data.following)"
+        if let user = user {
+            configUserDetails(withUser: user)
+        } else {
+            locationIconImageView.alpha = 0
+            locationLabel.alpha = 0
+        }
+    }
+    
+    func configUserDetails(withUser user: User) {
+        if let repos = user.repos, let followers = user.followers, let following = user.following {
+            reposCount.text = "\(repos)"
+            followersCount.text = "\(followers)"
+            followingCounts.text = "\(following)"
+        }
+        
+        if let location = user.location {
+            locationIconImageView.rendering(withColor: .anthracite, imageName: "location")
+            locationLabel.text = location
+            locationIconImageView.alpha = 1
+            locationLabel.alpha = 1
+        } else {
+            locationIconImageView.alpha = 0
+            locationLabel.alpha = 0
+        }
     }
 }

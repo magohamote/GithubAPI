@@ -43,6 +43,9 @@
 		FC327B831FD76710002B498D /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC327B821FD76710002B498D /* Reachability.swift */; };
 		FCBE63971FD80FCF00253C04 /* NoDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBE63961FD80FCF00253C04 /* NoDataCell.swift */; };
 		FCBE63991FD827D000253C04 /* LoadingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBE63981FD827D000253C04 /* LoadingCell.swift */; };
+		FCBE639D1FD8549900253C04 /* UIImage+Rendering.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBE639C1FD8549900253C04 /* UIImage+Rendering.swift */; };
+		FCBE639F1FD85CAB00253C04 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBE639E1FD85CAB00253C04 /* WelcomeViewController.swift */; };
+		FCBE63A11FD85CE000253C04 /* UIViewController+Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBE63A01FD85CE000253C04 /* UIViewController+Identifier.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,6 +114,9 @@
 		FC327B821FD76710002B498D /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		FCBE63961FD80FCF00253C04 /* NoDataCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoDataCell.swift; sourceTree = "<group>"; };
 		FCBE63981FD827D000253C04 /* LoadingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingCell.swift; sourceTree = "<group>"; };
+		FCBE639C1FD8549900253C04 /* UIImage+Rendering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Rendering.swift"; sourceTree = "<group>"; };
+		FCBE639E1FD85CAB00253C04 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
+		FCBE63A01FD85CE000253C04 /* UIViewController+Identifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Identifier.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,6 +242,7 @@
 				FC2416881FD59C9E00EE36D3 /* Cells */,
 				FC2416D41FD5FE2A00EE36D3 /* UserListViewController.swift */,
 				FC2416DC1FD6A06C00EE36D3 /* UserViewController.swift */,
+				FCBE639E1FD85CAB00253C04 /* WelcomeViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -285,6 +292,8 @@
 				FC2416861FD5972F00EE36D3 /* UIColor+Hex.swift */,
 				FC2416D81FD6070D00EE36D3 /* UIViewController+Show+Hide.swift */,
 				FC327B741FD6D3AC002B498D /* UILabel+Height.swift */,
+				FCBE639C1FD8549900253C04 /* UIImage+Rendering.swift */,
+				FCBE63A01FD85CE000253C04 /* UIViewController+Identifier.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -647,15 +656,18 @@
 				FC327B731FD6CF8C002B498D /* UserDetailsCell.swift in Sources */,
 				FC2416DD1FD6A06C00EE36D3 /* UserViewController.swift in Sources */,
 				FC2416D71FD5FF0800EE36D3 /* UserCell.swift in Sources */,
+				FCBE639F1FD85CAB00253C04 /* WelcomeViewController.swift in Sources */,
 				FCBE63971FD80FCF00253C04 /* NoDataCell.swift in Sources */,
 				FC24168E1FD5B4F700EE36D3 /* User.swift in Sources */,
 				FC2416D91FD6070D00EE36D3 /* UIViewController+Show+Hide.swift in Sources */,
 				FC2416901FD5B59E00EE36D3 /* UserDataModel.swift in Sources */,
+				FCBE639D1FD8549900253C04 /* UIImage+Rendering.swift in Sources */,
 				FC24164A1FD5954600EE36D3 /* AppDelegate.swift in Sources */,
 				FCBE63991FD827D000253C04 /* LoadingCell.swift in Sources */,
 				FC327B831FD76710002B498D /* Reachability.swift in Sources */,
 				FC327B751FD6D3AC002B498D /* UILabel+Height.swift in Sources */,
 				FC2416931FD5B61000EE36D3 /* Error.swift in Sources */,
+				FCBE63A11FD85CE000253C04 /* UIViewController+Identifier.swift in Sources */,
 				FC327B6F1FD6B4EC002B498D /* RepoDataModel.swift in Sources */,
 				FC2416871FD5972F00EE36D3 /* UIColor+Hex.swift in Sources */,
 				FC327B771FD6D7E6002B498D /* ConfigurationReader.swift in Sources */,

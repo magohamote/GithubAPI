@@ -14,10 +14,6 @@ class UserCollectionCell: UICollectionViewCell {
     @IBOutlet var userImageView: UIImageView!
     @IBOutlet var usernameLabel: UILabel!
     
-    class var identifier: String {
-        return String(describing: self)
-    }
-    
     func config(withUser user: User) {
         if let avatarUrl = URL(string: user.avatarUrl) {
             userImageView.sd_setImage(with: avatarUrl, completed: nil)

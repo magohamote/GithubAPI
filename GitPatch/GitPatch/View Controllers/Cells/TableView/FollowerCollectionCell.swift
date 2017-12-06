@@ -11,11 +11,7 @@ import UIKit
 class FollowerCollectionCell: UITableViewCell {
     
     @IBOutlet weak var collectionView: UICollectionView!
-    
-    class var identifier: String {
-        return String(describing: self)
-    }
-    
+
     var collectionViewOffset: CGFloat {
         get {
             return collectionView.contentOffset.x

@@ -13,10 +13,6 @@ class NoDataCell: UITableViewCell {
     
     @IBOutlet var noDataLabel: UILabel!
     
-    class var identifier: String {
-        return String(describing: self)
-    }
-    
     func config(withUsername username: String, dataType: String) {
         if Reachability.isConnected() {
             noDataLabel.text = "\(username) has no \(dataType) :("

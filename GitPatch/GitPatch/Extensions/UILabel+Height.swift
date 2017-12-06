@@ -10,10 +10,10 @@ import UIKit
 
 extension UILabel {
     func retrieveTextHeight () -> CGFloat {
-        if let text = self.text {
-            let attributedText = NSAttributedString(string: text, attributes: [NSAttributedStringKey.font:self.font])
+        if let text = text {
+            let attributedText = NSAttributedString(string: text, attributes: [NSAttributedStringKey.font: font])
             
-            let rect = attributedText.boundingRect(with: CGSize(width: self.frame.size.width, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, context: nil)
+            let rect = attributedText.boundingRect(with: CGSize(width: frame.size.width, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, context: nil)
             
             return ceil(rect.size.height)
         }

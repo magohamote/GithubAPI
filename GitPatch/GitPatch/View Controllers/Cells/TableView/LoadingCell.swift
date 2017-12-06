@@ -12,10 +12,6 @@ class LoadingCell: UITableViewCell {
     
     @IBOutlet var activityIndicator: UIActivityIndicatorView!
     
-    class var identifier: String {
-        return String(describing: self)
-    }
-    
     func config() {
         activityIndicator.startAnimating()
     }
