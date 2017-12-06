@@ -12,7 +12,6 @@
 		CC45C0F5F775226367D6B2D4 /* Pods_GitPatchUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB96953C3F89CD5497BC4F1B /* Pods_GitPatchUITests.framework */; };
 		FC24164A1FD5954600EE36D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2416491FD5954600EE36D3 /* AppDelegate.swift */; };
 		FC24164F1FD5954600EE36D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC24164D1FD5954600EE36D3 /* Main.storyboard */; };
-		FC2416521FD5954600EE36D3 /* GitPatch.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FC2416501FD5954600EE36D3 /* GitPatch.xcdatamodeld */; };
 		FC2416541FD5954600EE36D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC2416531FD5954600EE36D3 /* Assets.xcassets */; };
 		FC2416571FD5954600EE36D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC2416551FD5954600EE36D3 /* LaunchScreen.storyboard */; };
 		FC2416621FD5954600EE36D3 /* GitPatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2416611FD5954600EE36D3 /* GitPatchTests.swift */; };
@@ -41,6 +40,7 @@
 		FC327B7B1FD6F5AD002B498D /* UserDetailsDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC327B7A1FD6F5AD002B498D /* UserDetailsDataModel.swift */; };
 		FC327B7F1FD73EC9002B498D /* FollowerCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC327B7E1FD73EC9002B498D /* FollowerCollectionCell.swift */; };
 		FC327B811FD741C4002B498D /* UserCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC327B801FD741C4002B498D /* UserCollectionCell.swift */; };
+		FC327B831FD76710002B498D /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC327B821FD76710002B498D /* Reachability.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,7 +73,6 @@
 		FC2416461FD5954600EE36D3 /* GitPatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitPatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC2416491FD5954600EE36D3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FC24164E1FD5954600EE36D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		FC2416511FD5954600EE36D3 /* GitPatch.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GitPatch.xcdatamodel; sourceTree = "<group>"; };
 		FC2416531FD5954600EE36D3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FC2416561FD5954600EE36D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FC2416581FD5954600EE36D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -107,6 +106,7 @@
 		FC327B7A1FD6F5AD002B498D /* UserDetailsDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailsDataModel.swift; sourceTree = "<group>"; };
 		FC327B7E1FD73EC9002B498D /* FollowerCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowerCollectionCell.swift; sourceTree = "<group>"; };
 		FC327B801FD741C4002B498D /* UserCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCollectionCell.swift; sourceTree = "<group>"; };
+		FC327B821FD76710002B498D /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -194,7 +194,6 @@
 				FC24167B1FD5955900EE36D3 /* View Controllers */,
 				FC24167F1FD5957800EE36D3 /* User Interfaces */,
 				FC24167A1FD5955300EE36D3 /* Resources */,
-				FC2416501FD5954600EE36D3 /* GitPatch.xcdatamodeld */,
 			);
 			path = GitPatch;
 			sourceTree = "<group>";
@@ -220,9 +219,9 @@
 		FC24167A1FD5955300EE36D3 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FC2416531FD5954600EE36D3 /* Assets.xcassets */,
 				FC327B781FD6DD65002B498D /* languages_colors.json */,
 				FC2416981FD5C5DE00EE36D3 /* Fonts */,
-				FC2416531FD5954600EE36D3 /* Assets.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -243,6 +242,7 @@
 				FC2416921FD5B61000EE36D3 /* Error.swift */,
 				FC327B761FD6D7E6002B498D /* ConfigurationReader.swift */,
 				FC2416831FD5970700EE36D3 /* NavigationController.swift */,
+				FC327B821FD76710002B498D /* Reachability.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -618,7 +618,6 @@
 			files = (
 				FC327B7F1FD73EC9002B498D /* FollowerCollectionCell.swift in Sources */,
 				FC327B7B1FD6F5AD002B498D /* UserDetailsDataModel.swift in Sources */,
-				FC2416521FD5954600EE36D3 /* GitPatch.xcdatamodeld in Sources */,
 				FC327B6D1FD6B089002B498D /* Repo.swift in Sources */,
 				FC2416D51FD5FE2A00EE36D3 /* UserListViewController.swift in Sources */,
 				FC2416841FD5970700EE36D3 /* NavigationController.swift in Sources */,
@@ -630,6 +629,7 @@
 				FC2416D91FD6070D00EE36D3 /* UIViewController+Show+Hide.swift in Sources */,
 				FC2416901FD5B59E00EE36D3 /* UserDataModel.swift in Sources */,
 				FC24164A1FD5954600EE36D3 /* AppDelegate.swift in Sources */,
+				FC327B831FD76710002B498D /* Reachability.swift in Sources */,
 				FC327B751FD6D3AC002B498D /* UILabel+Height.swift in Sources */,
 				FC2416931FD5B61000EE36D3 /* Error.swift in Sources */,
 				FC327B6F1FD6B4EC002B498D /* RepoDataModel.swift in Sources */,
@@ -941,19 +941,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		FC2416501FD5954600EE36D3 /* GitPatch.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				FC2416511FD5954600EE36D3 /* GitPatch.xcdatamodel */,
-			);
-			currentVersion = FC2416511FD5954600EE36D3 /* GitPatch.xcdatamodel */;
-			path = GitPatch.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = FC24163E1FD5954600EE36D3 /* Project object */;
 }

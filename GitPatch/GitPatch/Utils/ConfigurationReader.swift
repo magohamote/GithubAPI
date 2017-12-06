@@ -6,8 +6,8 @@
 //  Copyright © 2017 Rolland Cédric. All rights reserved.
 //
 
-import Foundation
 import UIKit
+import os.log
 
 class ConfigurationReader {
     
@@ -25,7 +25,7 @@ class ConfigurationReader {
                     return
                 }
             } catch {
-                print("error while loading color from JSON file")
+                os_log("error while loading color from JSON file", log: OSLog.default, type: .debug)
             }
         }
         colors = [:]

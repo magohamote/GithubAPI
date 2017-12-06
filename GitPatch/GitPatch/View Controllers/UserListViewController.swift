@@ -14,7 +14,7 @@ class UserListViewController: UIViewController {
     
     private var storedOffsets = [Int: CGFloat]()
     private let dataSource = UserDataModel()
-    private var usersArray = [User](){
+    private var usersArray = [User]() {
         didSet {
             tableView?.reloadData()
         }
@@ -40,7 +40,15 @@ class UserListViewController: UIViewController {
     }
     
     func downloadData() {
-        dataSource.requestData(url: "https://api.github.com/users?since=", since: 0)
+        if Reachability.isConnected() {
+            dataSource.requestData(url: "https://api.github.com/users?since=", since: 0)
+        } else if let users = dataSource.loadUsers() {
+            usersArray = users
+            tableView.reloadData()
+            hideLoadingView(tableView: tableView)
+        } else {
+            // TODO: Handle no data and offline message
+        }
     }
 }
 
@@ -77,6 +85,7 @@ extension UserListViewController: UserDataModelDelegate {
     
     func didReceiveDataUpdate(users: [User]) {
         usersArray = users
+        dataSource.saveUsers(users: users)
         hideLoadingView(tableView: tableView)
     }
     

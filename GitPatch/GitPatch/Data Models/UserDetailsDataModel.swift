@@ -6,8 +6,8 @@
 //  Copyright © 2017 Rolland Cédric. All rights reserved.
 //
 
-import Foundation
 import Alamofire
+import os.log
 
 protocol UserDetailsDataModelDelegate: class {
     func didReceiveFollowers(followers: [User])
@@ -25,14 +25,14 @@ class UserDetailsDataModel {
             
             guard response.result.isSuccess else {
                 if let error = response.result.error {
-                    print("Error while fetching data: \(error)")
+                    os_log("Error while fetching data: %@", log: OSLog.default, type: .debug, "\(error)")
                     self.delegate?.didFailWithError(error: error)
                 }
                 return
             }
             
             guard let responseJSON = response.result.value as? [[String: Any]] else {
-                print("Invalid data received from the service")
+                os_log("Invalid data received from the service", log: OSLog.default, type: .debug)
                 self.delegate?.didFailWithError(error: FormatError.badFormatError)
                 return
             }

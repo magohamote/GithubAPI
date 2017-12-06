@@ -6,8 +6,8 @@
 //  Copyright © 2017 Rolland Cédric. All rights reserved.
 //
 
-import Foundation
 import Alamofire
+import os.log
 
 protocol RepoDataModelDelegate: class {
     func didReceiveDataUpdate(repos: [Repo])
@@ -23,14 +23,14 @@ class RepoDataModel {
             
             guard response.result.isSuccess else {
                 if let error = response.result.error {
-                    print("Error while fetching data: \(error)")
+                    os_log("Error while fetching data: %@", log: OSLog.default, type: .debug, "\(error)")
                     self.delegate?.didFailDataUpdateWithError(error: error)
                 }
                 return
             }
             
             guard let responseJSON = response.result.value as? [[String: Any]] else {
-                print("Invalid data received from the service")
+                os_log("Invalid data received from the service", log: OSLog.default, type: .debug)
                 self.delegate?.didFailDataUpdateWithError(error: FormatError.badFormatError)
                 return
             }
