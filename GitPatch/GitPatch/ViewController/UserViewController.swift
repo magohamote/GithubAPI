@@ -19,8 +19,9 @@ class UserViewController: UIViewController {
     private var isDownloadingRepos = false
     private var isDownloadingFollowers = false
     private var followersArray = [User]()
-    private let repoDataSource = RepoDataModel()
-    private let userDetailsDataSource = UserDetailsDataModel()
+    private let repoDataSource = RepoViewModel()
+    private let userDetailsDataSource = UserDetailsViewModel()
+    private let followersDataSource = FollowersViewModel()
     private var storedOffsets = [Int: CGFloat]()
     private var reposArray = [Repo](){
         didSet {
@@ -32,7 +33,7 @@ class UserViewController: UIViewController {
         super.viewDidLoad()
         
         guard let user = user else {
-            showError()
+            showError(withMessage: "An error occured while presenting user details.")
             return
         }
         
@@ -47,15 +48,16 @@ class UserViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         repoDataSource.delegate = self
+        followersDataSource.delegate = self
         userDetailsDataSource.delegate = self
     }
     
     func downloadData(withUser user: User) {
         isDownloadingRepos = true
         isDownloadingFollowers = true
-        repoDataSource.requestData(url: user.reposUrl)
+        repoDataSource.requestUserRepos(url: user.reposUrl)
         userDetailsDataSource.requestUserDetails(url: user.url)
-        userDetailsDataSource.requestUsersFollowers(url: user.followersUrl)
+        followersDataSource.requestUserFollowers(url: user.followersUrl)
     }
     
     func updateSection(section: Int) {
@@ -206,33 +208,39 @@ extension UserViewController: UICollectionViewDelegate {
     }
 }
 
-extension UserViewController: RepoDataModelDelegate {
-    func didReceiveDataUpdate(repos: [Repo]) {
+extension UserViewController: RepoViewModelDelegate {
+    func didReceiveRepos(repos: [Repo]) {
         isDownloadingRepos = false
         reposArray = repos
         updateSection(section: 0)
     }
     
-    func didFailDataUpdateWithError(error: Error) {
+    func didFailDownloadReposWithError(error: Error) {
         isDownloadingRepos = false
-        showError()
+        showError(withMessage: "An error occured while downloading repositories.")
     }
 }
 
-extension UserViewController: UserDetailsDataModelDelegate {
+extension UserViewController: UserDetailsViewModelDelegate {
+    func didReceiveUserDetails(user: User) {
+        self.userDetails = user
+        updateSection(section: 0)
+    }
+    
+    func didFailDownloadUserDetailsWithError(error: Error) {
+        showError(withMessage: "An error occured while downloading user details.")
+    }
+}
+
+extension UserViewController: FollowersViewModelDelegate {
     func didReceiveUsersFollowers(followers: [User]) {
         isDownloadingFollowers = false
         followersArray = followers
         updateSection(section: 1)
     }
     
-    func didReceiveUserDetails(user: User) {
-        self.userDetails = user
-        updateSection(section: 0)
-    }
-    
-    func didFailWithError(error: Error) {
+    func didFailDownloadFollowersWithError(error: Error) {
         isDownloadingFollowers = false
-        showError()
+        showError(withMessage: "An error occured while downloading followers.")
     }
 }

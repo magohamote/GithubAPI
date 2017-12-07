@@ -1,5 +1,5 @@
 //
-//  UserDataModel.swift
+//  UserViewModel.swift
 //  GitPatch
 //
 //  Created by Rolland Cédric on 04.12.17.
@@ -9,38 +9,40 @@
 import Alamofire
 import os.log
 
-protocol UserDataModelDelegate: class {
-    func didReceiveDataUpdate(users: [User])
-    func didFailDataUpdateWithError(error: Error)
+protocol UserViewModelDelegate: class {
+    func didReceiveUsersList(users: [User])
+    func didFailDownloadUsersListWithError(error: Error)
 }
 
-class UserDataModel {
+class UserViewModel {
     
-    weak var delegate: UserDataModelDelegate?
+    typealias UserListResult = [[String: Any]]
+    
+    weak var delegate: UserViewModelDelegate?
     
     func requestUserList(url: String, since: Int) {
         Alamofire.request("\(url)\(since)").responseJSON { response in
             
             guard response.result.isSuccess else {
                 if let error = response.result.error {
-                    os_log("Error while fetching data: %@", log: OSLog.default, type: .debug, "\(error)")
-                    self.delegate?.didFailDataUpdateWithError(error: error)
+                    os_log("Error while fetching users list: %@", log: OSLog.default, type: .debug, "\(error)")
+                    self.delegate?.didFailDownloadUsersListWithError(error: error)
                 }
                 return
             }
             
-            guard let responseJSON = response.result.value as? [[String: Any]] else {
+            guard let responseJSON = response.result.value as? UserListResult else {
                 os_log("Invalid data received from the service", log: OSLog.default, type: .debug)
                 os_log("data: %@", log: OSLog.default, type: .debug, response.result.value.debugDescription)
-                self.delegate?.didFailDataUpdateWithError(error: FormatError.badFormatError)
+                self.delegate?.didFailDownloadUsersListWithError(error: FormatError.badFormatError)
                 return
             }
             
-            self.setDataWithResponse(response: responseJSON)
+            self.setUsersList(withResponse: responseJSON)
         }
     }
     
-    private func setDataWithResponse(response:[[String: Any]]) {
+    private func setUsersList(withResponse response: UserListResult) {
         var usersArray = [User]()
         
         for data in response {
@@ -49,7 +51,7 @@ class UserDataModel {
             }
         }
         
-        delegate?.didReceiveDataUpdate(users: usersArray)
+        delegate?.didReceiveUsersList(users: usersArray)
     }
     
     func saveUsers(users: [User]) {
@@ -62,7 +64,7 @@ class UserDataModel {
         if isSuccessfulSave {
             os_log("Users successfully saved.", log: OSLog.default, type: .debug)
         } else {
-            os_log("Failed to save users...", log: OSLog.default, type: .error)
+            os_log("Failed to save users.", log: OSLog.default, type: .error)
         }
     }
     

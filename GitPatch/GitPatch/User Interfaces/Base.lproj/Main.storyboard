@@ -222,6 +222,7 @@
                                                                 <constraint firstItem="Y2n-ao-3SF" firstAttribute="top" secondItem="2Vh-vM-OVU" secondAttribute="top" id="MIe-z4-Rgg"/>
                                                                 <constraint firstAttribute="trailing" secondItem="jsY-sT-ppn" secondAttribute="trailing" constant="10" id="OML-9T-s14"/>
                                                                 <constraint firstItem="U2s-LS-kTf" firstAttribute="leading" secondItem="2Vh-vM-OVU" secondAttribute="leading" constant="-5" id="Q0X-Fg-hhd"/>
+                                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="pBr-Ab-FqS" secondAttribute="trailing" constant="20" symbolic="YES" id="Qnk-fR-n7e"/>
                                                                 <constraint firstAttribute="trailing" secondItem="rrJ-Oc-4L6" secondAttribute="trailing" constant="10" id="RT7-Sj-ILq"/>
                                                                 <constraint firstItem="z34-hv-99Q" firstAttribute="leading" secondItem="Y2n-ao-3SF" secondAttribute="leading" id="UVM-yn-rDF"/>
                                                                 <constraint firstItem="rrJ-Oc-4L6" firstAttribute="centerY" secondItem="z34-hv-99Q" secondAttribute="centerY" id="WIJ-VP-O7s"/>
@@ -494,7 +495,7 @@
                                             <outlet property="updatedAtLabel" destination="uCI-Q7-B1e" id="j6v-BM-Bkm"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="NoDataCell" rowHeight="50" id="rLZ-WC-Oum" customClass="NoDataCell" customModule="GitPatch" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="NoDataCell" rowHeight="50" id="rLZ-WC-Oum" customClass="NoDataCell" customModule="GitPatch" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="465" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rLZ-WC-Oum" id="A02-Nd-6a7">
@@ -523,7 +524,7 @@
                                             <outlet property="noDataLabel" destination="Avh-y3-Bwg" id="Dot-ZY-7wB"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="LoadingCell" rowHeight="50" id="byR-8d-OsJ" customClass="LoadingCell" customModule="GitPatch" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="LoadingCell" rowHeight="50" id="byR-8d-OsJ" customClass="LoadingCell" customModule="GitPatch" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="515" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="byR-8d-OsJ" id="Cj6-YV-CJR">
@@ -631,7 +632,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YW9-f8-2fV" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <swipeGestureRecognizer direction="right" id="8R9-kd-9YI"/>
             </objects>
-            <point key="canvasLocation" x="840" y="-1391"/>
+            <point key="canvasLocation" x="1614" y="-1381"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="MzW-OQ-3Ag">

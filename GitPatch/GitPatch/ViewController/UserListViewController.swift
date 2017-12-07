@@ -15,8 +15,8 @@ class UserListViewController: UIViewController {
     
     private var lastUserIndex = 0
     private var storedOffsets = [Int: CGFloat]()
-    private let dataSource = UserDataModel()
-    private var usersArray = [User]() {
+    private let dataSource = UserViewModel()
+    internal var usersArray = [User]() {
         didSet {
             tableView?.reloadData()
         }
@@ -100,17 +100,17 @@ extension UserListViewController: UITableViewDelegate {
     }
 }
 
-extension UserListViewController: UserDataModelDelegate {
+extension UserListViewController: UserViewModelDelegate {
     
-    func didReceiveDataUpdate(users: [User]) {
+    func didReceiveUsersList(users: [User]) {
         usersArray.append(contentsOf: users)
         dataSource.saveUsers(users: usersArray)
         hideLoadingView(tableView: tableView)
     }
     
-    func didFailDataUpdateWithError(error: Error) {
+    func didFailDownloadUsersListWithError(error: Error) {
         hideLoadingView(tableView: tableView)
-        showError()
+        showError(withMessage: "An error occured while downloading users list.")
         if usersArray.count == 0 {
             tableView.alpha = 0
         } else {
