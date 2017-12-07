@@ -16,9 +16,8 @@ class UserCell: UITableViewCell {
     @IBOutlet var rightArrowImageView: UIImageView!
     
     func config(withUser user: User) {
-        userImageView.rendering(withColor: .navyBlue, imageName: "placeholder")
         if let avatarUrl = URL(string: user.avatarUrl) {
-            userImageView.sd_setImage(with: avatarUrl, completed: nil)
+            userImageView.sd_setImage(with: avatarUrl, placeholderImage:UIImage(named: "placeholder"), completed: nil)
         }
         userImageView.layer.cornerRadius = userImageView.frame.height/2
         userImageView.layer.masksToBounds = true

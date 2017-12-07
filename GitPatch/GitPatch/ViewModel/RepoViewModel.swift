@@ -18,11 +18,7 @@ class RepoViewModel {
     
     weak var delegate: RepoViewModelDelegate?
     
-    private let service: Service
-    
-    init(service: Service) {
-        self.service = service
-    }
+    internal var service = Service()
     
     func requestUserRepos(url: String) {
         service.requestUserRepos(url: url, completion: setUserRepos)
@@ -32,6 +28,8 @@ class RepoViewModel {
         guard let response = response else {
             if let error = error {
                 delegate?.didFailDownloadReposWithError(error: error)
+            } else {
+                delegate?.didFailDownloadReposWithError(error: FormatError.badFormatError)
             }
             return
         }
@@ -43,6 +41,10 @@ class RepoViewModel {
             }
         }
         
-        delegate?.didReceiveRepos(repos: reposArray)
+        if response.count != reposArray.count {
+            delegate?.didFailDownloadReposWithError(error: FormatError.badFormatError)
+        } else {
+            delegate?.didReceiveRepos(repos: reposArray)
+        }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  FollowersViewModel.swift
+//  FollowerViewModel.swift
 //  GitPatch
 //
 //  Created by Rolland Cédric on 07.12.17.
@@ -9,20 +9,16 @@
 import Alamofire
 import os.log
 
-protocol FollowersViewModelDelegate: class {
+protocol FollowerViewModelDelegate: class {
     func didReceiveUsersFollowers(followers: [User])
     func didFailDownloadFollowersWithError(error: Error)
 }
 
-class FollowersViewModel {
+class FollowerViewModel {
     
-    weak var delegate: FollowersViewModelDelegate?
+    weak var delegate: FollowerViewModelDelegate?
     
-    private let service: Service
-    
-    init(service: Service) {
-        self.service = service
-    }
+    internal var service = Service()
     
     func requestUserFollowers(url: String) {
         service.requestUserFollowers(url: url, completion: setUsersFollowers)
@@ -32,18 +28,24 @@ class FollowersViewModel {
         guard let response = response else {
             if let error = error {
                 delegate?.didFailDownloadFollowersWithError(error: error)
+            } else {
+                delegate?.didFailDownloadFollowersWithError(error: FormatError.badFormatError)
             }
             return
         }
         var followersArray = [User]()
         
         for data in response {
-            if let follower = User(json: data) {
+            if let follower = User(withJson: data) {
                 followersArray.append(follower)
             }
         }
         
-        delegate?.didReceiveUsersFollowers(followers: followersArray)
+        if response.count != followersArray.count {
+            delegate?.didFailDownloadFollowersWithError(error: FormatError.badFormatError)
+        } else {
+            delegate?.didReceiveUsersFollowers(followers: followersArray)
+        }
     }
 }
 

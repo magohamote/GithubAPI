@@ -18,8 +18,6 @@ class WelcomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        
         startButton.addTarget(self, action: #selector(start(_:)), for: .touchUpInside)
         swipeGestureRecognizer.addTarget(self, action: #selector(start(_:)))
         swipeGestureRecognizer.direction = .up

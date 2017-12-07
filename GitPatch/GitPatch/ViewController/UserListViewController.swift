@@ -15,7 +15,7 @@ class UserListViewController: UIViewController {
     
     private var lastUserIndex = 0
     private var storedOffsets = [Int: CGFloat]()
-    private let dataSource = UserViewModel(service: Service())
+    private let dataSource = UserViewModel()
     internal var usersArray = [User]() {
         didSet {
             tableView?.reloadData()
@@ -42,7 +42,7 @@ class UserListViewController: UIViewController {
     func downloadData(lastUserIndex: Int) {
         if Reachability.isConnected() {
             tableView.alpha = 1
-            dataSource.requestUserList(url: "https://api.github.com/users?since=", since: lastUserIndex)
+            dataSource.requestUserList(since: lastUserIndex)
             self.lastUserIndex += 30
             print("downloading")
         } else if let users = dataSource.loadUsers() {

@@ -38,7 +38,7 @@ class RepoCell: UITableViewCell {
         forksCountLabel.text = repo.forksCount.formattedWithSeparator
         updatedAtLabel.text = "Updated on \(configDate(withString: repo.updatedAt))"
         
-        configDot(withLanguage: repo.language)
+        configDot(withLanguage: repo.language ?? "")
     }
     
     func configDate(withString dateString: String) -> String {

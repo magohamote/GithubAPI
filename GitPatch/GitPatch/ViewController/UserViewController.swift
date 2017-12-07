@@ -19,9 +19,9 @@ class UserViewController: UIViewController {
     private var isDownloadingRepos = false
     private var isDownloadingFollowers = false
     private var followersArray = [User]()
-    private let repoDataSource = RepoViewModel(service: Service())
-    private let userDetailsDataSource = UserDetailsViewModel(service: Service())
-    private let followersDataSource = FollowersViewModel(service: Service())
+    private let repoDataSource = RepoViewModel()
+    private let userDetailDataSource = UserDetailViewModel()
+    private let followerDataSource = FollowerViewModel()
     private var storedOffsets = [Int: CGFloat]()
     private var reposArray = [Repo](){
         didSet {
@@ -48,16 +48,16 @@ class UserViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         repoDataSource.delegate = self
-        followersDataSource.delegate = self
-        userDetailsDataSource.delegate = self
+        followerDataSource.delegate = self
+        userDetailDataSource.delegate = self
     }
     
     func downloadData(withUser user: User) {
         isDownloadingRepos = true
         isDownloadingFollowers = true
         repoDataSource.requestUserRepos(url: user.reposUrl)
-        userDetailsDataSource.requestUserDetails(url: user.url)
-        followersDataSource.requestUserFollowers(url: user.followersUrl)
+        userDetailDataSource.requestUserDetails(url: user.url)
+        followerDataSource.requestUserFollowers(url: user.followersUrl)
     }
     
     func updateSection(section: Int) {
@@ -221,7 +221,7 @@ extension UserViewController: RepoViewModelDelegate {
     }
 }
 
-extension UserViewController: UserDetailsViewModelDelegate {
+extension UserViewController: UserDetailViewModelDelegate {
     func didReceiveUserDetails(user: User) {
         self.userDetails = user
         updateSection(section: 0)
@@ -232,7 +232,7 @@ extension UserViewController: UserDetailsViewModelDelegate {
     }
 }
 
-extension UserViewController: FollowersViewModelDelegate {
+extension UserViewController: FollowerViewModelDelegate {
     func didReceiveUsersFollowers(followers: [User]) {
         isDownloadingFollowers = false
         followersArray = followers

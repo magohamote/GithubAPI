@@ -16,7 +16,7 @@ class UserCollectionCell: UICollectionViewCell {
     
     func config(withUser user: User) {
         if let avatarUrl = URL(string: user.avatarUrl) {
-            userImageView.sd_setImage(with: avatarUrl, completed: nil)
+            userImageView.sd_setImage(with: avatarUrl, placeholderImage:UIImage(named: "placeholder"), completed: nil)
         }
         userImageView.layer.masksToBounds = true
         userImageView.layer.cornerRadius = userImageView.frame.height/2

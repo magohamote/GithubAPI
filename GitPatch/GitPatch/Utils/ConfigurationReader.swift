@@ -35,6 +35,6 @@ class ConfigurationReader {
         if let color = colors[key], let colorInt = UInt(color, radix: 16) {
             return UIColor(rgb: colorInt)
         }
-        return .navyBlue
+        return .clear
     }
 }

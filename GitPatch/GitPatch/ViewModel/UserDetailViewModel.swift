@@ -1,5 +1,5 @@
 //
-//  UserDetailsViewModel.swift
+//  UserDetailViewModel.swift
 //  GitPatch
 //
 //  Created by Rolland Cédric on 05.12.17.
@@ -9,20 +9,16 @@
 import Alamofire
 import os.log
 
-protocol UserDetailsViewModelDelegate: class {
+protocol UserDetailViewModelDelegate: class {
     func didReceiveUserDetails(user: User)
     func didFailDownloadUserDetailsWithError(error: Error)
 }
 
-class UserDetailsViewModel {
+class UserDetailViewModel {
     
-    weak var delegate: UserDetailsViewModelDelegate?
+    weak var delegate: UserDetailViewModelDelegate?
     
-    private let service: Service
-    
-    init(service: Service) {
-        self.service = service
-    }
+    internal var service = Service()
 
     func requestUserDetails(url: String) {
         service.requestUserDetails(url: url, completion: setUserDetails)
@@ -32,12 +28,16 @@ class UserDetailsViewModel {
         guard let response = response else {
             if let error = error {
                 delegate?.didFailDownloadUserDetailsWithError(error: error)
+            } else {
+                delegate?.didFailDownloadUserDetailsWithError(error: FormatError.badFormatError)
             }
             return
         }
         
-        if let user = User(json: response) {
+        if let user = User(withJson: response) {
             delegate?.didReceiveUserDetails(user: user)
+        } else {
+            delegate?.didFailDownloadUserDetailsWithError(error: FormatError.badFormatError)
         }
     }
 }

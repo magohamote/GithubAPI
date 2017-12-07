@@ -18,13 +18,9 @@ class UserViewModel {
         
     weak var delegate: UserViewModelDelegate?
     
-    private let service: Service
+    internal var service = Service()
     
-    init(service: Service) {
-        self.service = service
-    }
-    
-    func requestUserList(url: String, since: Int) {
+    func requestUserList(since: Int) {
         service.requestUserList(since: since, completion: setUsersList)
     }
     
@@ -32,40 +28,54 @@ class UserViewModel {
         guard let response = response else {
             if let error = error {
                 delegate?.didFailDownloadUsersListWithError(error: error)
+            } else {
+                delegate?.didFailDownloadUsersListWithError(error: FormatError.badFormatError)
             }
             return
         }
         var usersArray = [User]()
         
         for data in response {
-            if let user = User(json: data) {
+            if let user = User(withJson: data) {
                 usersArray.append(user)
             }
         }
         
-        delegate?.didReceiveUsersList(users: usersArray)
-    }
-    
-    func saveUsers(users: [User]) {
-        var isSuccessfulSave = false
-        if users.count > 100 { // save only up to 100 users for offline state
-            isSuccessfulSave = NSKeyedArchiver.archiveRootObject(Array(users[0..<100]), toFile: User.ArchiveURL.path)
+        if response.count != usersArray.count {
+            delegate?.didFailDownloadUsersListWithError(error: FormatError.badFormatError)
         } else {
-            isSuccessfulSave = NSKeyedArchiver.archiveRootObject(users, toFile: User.ArchiveURL.path)
+            delegate?.didReceiveUsersList(users: usersArray)
         }
-        if isSuccessfulSave {
-            os_log("Users successfully saved.", log: OSLog.default, type: .debug)
-        } else {
+    }
+
+    func saveUsers(users: [User]) {
+        do {
+            var data = Data()
+            if users.count > 100 {
+                data = try PropertyListEncoder().encode(Array(users[0..<100]))
+            } else {
+                data = try PropertyListEncoder().encode(users)
+            }
+            let success = NSKeyedArchiver.archiveRootObject(data, toFile: User.ArchiveURL.path)
+            if success {
+                os_log("Users successfully saved.", log: OSLog.default, type: .debug)
+            } else {
+                os_log("Failed to save users.", log: OSLog.default, type: .error)
+            }
+        } catch {
             os_log("Failed to save users.", log: OSLog.default, type: .error)
         }
     }
     
-    func loadUsers() -> [User]?  {
-        if let users = NSKeyedUnarchiver.unarchiveObject(withFile: User.ArchiveURL.path) as? [User] {
+    func loadUsers() -> [User]? {
+        guard let data = NSKeyedUnarchiver.unarchiveObject(withFile: User.ArchiveURL.path) as? Data else { return nil }
+        do {
+            let users = try PropertyListDecoder().decode([User].self, from: data)
             os_log("Users successfully loaded.", log: OSLog.default, type: .debug)
             return users
+        } catch {
+            os_log("Failed to load users.", log: OSLog.default, type: .error)
+            return nil
         }
-        os_log("Users successfully loaded.", log: OSLog.default, type: .error)
-        return nil
     }
 }

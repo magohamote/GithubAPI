@@ -20,7 +20,7 @@ class UserDetailsCell: UITableViewCell {
     
     func config(withUser user: User?, imageUrl: String) {
         if let avatarUrl = URL(string: imageUrl) {
-            userImageView.sd_setImage(with: avatarUrl, completed: nil)
+            userImageView.sd_setImage(with: avatarUrl, placeholderImage:UIImage(named: "placeholder"), completed: nil)
         }
         userImageView.layer.cornerRadius = 5
         userImageView.layer.masksToBounds = true
