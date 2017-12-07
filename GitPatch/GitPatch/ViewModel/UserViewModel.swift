@@ -15,34 +15,26 @@ protocol UserViewModelDelegate: class {
 }
 
 class UserViewModel {
-    
-    typealias UserListResult = [[String: Any]]
-    
+        
     weak var delegate: UserViewModelDelegate?
     
-    func requestUserList(url: String, since: Int) {
-        Alamofire.request("\(url)\(since)").responseJSON { response in
-            
-            guard response.result.isSuccess else {
-                if let error = response.result.error {
-                    os_log("Error while fetching users list: %@", log: OSLog.default, type: .debug, "\(error)")
-                    self.delegate?.didFailDownloadUsersListWithError(error: error)
-                }
-                return
-            }
-            
-            guard let responseJSON = response.result.value as? UserListResult else {
-                os_log("Invalid data received from the service", log: OSLog.default, type: .debug)
-                os_log("data: %@", log: OSLog.default, type: .debug, response.result.value.debugDescription)
-                self.delegate?.didFailDownloadUsersListWithError(error: FormatError.badFormatError)
-                return
-            }
-            
-            self.setUsersList(withResponse: responseJSON)
-        }
+    private let service: Service
+    
+    init(service: Service) {
+        self.service = service
     }
     
-    private func setUsersList(withResponse response: UserListResult) {
+    func requestUserList(url: String, since: Int) {
+        service.requestUserList(since: since, completion: setUsersList)
+    }
+    
+    private func setUsersList(withResponse response: Service.MultipleResult?, error: Error?) {
+        guard let response = response else {
+            if let error = error {
+                delegate?.didFailDownloadUsersListWithError(error: error)
+            }
+            return
+        }
         var usersArray = [User]()
         
         for data in response {
@@ -69,6 +61,11 @@ class UserViewModel {
     }
     
     func loadUsers() -> [User]?  {
-        return NSKeyedUnarchiver.unarchiveObject(withFile: User.ArchiveURL.path) as? [User]
+        if let users = NSKeyedUnarchiver.unarchiveObject(withFile: User.ArchiveURL.path) as? [User] {
+            os_log("Users successfully loaded.", log: OSLog.default, type: .debug)
+            return users
+        }
+        os_log("Users successfully loaded.", log: OSLog.default, type: .error)
+        return nil
     }
 }

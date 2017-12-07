@@ -15,7 +15,7 @@ class UserListViewController: UIViewController {
     
     private var lastUserIndex = 0
     private var storedOffsets = [Int: CGFloat]()
-    private let dataSource = UserViewModel()
+    private let dataSource = UserViewModel(service: Service())
     internal var usersArray = [User]() {
         didSet {
             tableView?.reloadData()

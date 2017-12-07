@@ -53,6 +53,7 @@
 		FCBE639D1FD8549900253C04 /* UIImage+Rendering.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBE639C1FD8549900253C04 /* UIImage+Rendering.swift */; };
 		FCBE639F1FD85CAB00253C04 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBE639E1FD85CAB00253C04 /* WelcomeViewController.swift */; };
 		FCBE63A11FD85CE000253C04 /* UIViewController+Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBE63A01FD85CE000253C04 /* UIViewController+Identifier.swift */; };
+		FCDFFE851FD964FE0032C21C /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDFFE841FD964FE0032C21C /* Service.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -131,6 +132,7 @@
 		FCBE639C1FD8549900253C04 /* UIImage+Rendering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Rendering.swift"; sourceTree = "<group>"; };
 		FCBE639E1FD85CAB00253C04 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		FCBE63A01FD85CE000253C04 /* UIViewController+Identifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Identifier.swift"; sourceTree = "<group>"; };
+		FCDFFE841FD964FE0032C21C /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -234,6 +236,7 @@
 				FC2416581FD5954600EE36D3 /* Info.plist */,
 				FC24167C1FD5956100EE36D3 /* Utils */,
 				FC2416851FD5972100EE36D3 /* Extensions */,
+				FCDFFE831FD964EF0032C21C /* Service */,
 				FC24167D1FD5956500EE36D3 /* Model */,
 				FC24167E1FD5956D00EE36D3 /* ViewModel */,
 				FC1A71AE1FD94B41005FA32B /* View */,
@@ -367,6 +370,14 @@
 				FC327B801FD741C4002B498D /* UserCollectionCell.swift */,
 			);
 			path = CollectionView;
+			sourceTree = "<group>";
+		};
+		FCDFFE831FD964EF0032C21C /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				FCDFFE841FD964FE0032C21C /* Service.swift */,
+			);
+			path = Service;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -686,6 +697,7 @@
 				FC327B6D1FD6B089002B498D /* Repo.swift in Sources */,
 				FC2416D51FD5FE2A00EE36D3 /* UserListViewController.swift in Sources */,
 				FC2416841FD5970700EE36D3 /* NavigationController.swift in Sources */,
+				FCDFFE851FD964FE0032C21C /* Service.swift in Sources */,
 				FC327B811FD741C4002B498D /* UserCollectionCell.swift in Sources */,
 				FC1A71A61FD93DA1005FA32B /* FollowersViewModel.swift in Sources */,
 				FC327B731FD6CF8C002B498D /* UserDetailsCell.swift in Sources */,

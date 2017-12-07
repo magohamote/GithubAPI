@@ -25,16 +25,16 @@ class ConfigurationReader {
                     return
                 }
             } catch {
-                os_log("error while loading color from JSON file", log: OSLog.default, type: .debug)
+                os_log("error while loading color from JSON file", log: OSLog.default, type: .error)
             }
         }
         colors = [:]
     }
 
     func color(forKey key: String) -> UIColor {
-        if let color = colors[key] {
-            return UIColor(rgb: color)
+        if let color = colors[key], let colorInt = UInt(color, radix: 16) {
+            return UIColor(rgb: colorInt)
         }
-        return .clear
+        return .navyBlue
     }
 }

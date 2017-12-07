@@ -16,32 +16,26 @@ protocol UserDetailsViewModelDelegate: class {
 
 class UserDetailsViewModel {
     
-    typealias UserDetailResult = [String: Any]
     weak var delegate: UserDetailsViewModelDelegate?
     
+    private let service: Service
+    
+    init(service: Service) {
+        self.service = service
+    }
+
     func requestUserDetails(url: String) {
-        Alamofire.request(url).responseJSON { response in
-            
-            guard response.result.isSuccess else {
-                if let error = response.result.error {
-                    os_log("Error while fetching user details: %@", log: OSLog.default, type: .debug, "\(error)")
-                    self.delegate?.didFailDownloadUserDetailsWithError(error: error)
-                }
-                return
-            }
-            
-            guard let responseJSON = response.result.value as? UserDetailResult else {
-                os_log("Invalid data received from the service", log: OSLog.default, type: .debug)
-                os_log("data: %@", log: OSLog.default, type: .debug, response.result.value.debugDescription)
-                self.delegate?.didFailDownloadUserDetailsWithError(error: FormatError.badFormatError)
-                return
-            }
-            
-            self.setUserDetails(withResponse: responseJSON)
-        }
+        service.requestUserDetails(url: url, completion: setUserDetails)
     }
     
-    private func setUserDetails(withResponse response: UserDetailResult) {
+    private func setUserDetails(withResponse response: Service.UniqueResult?, error: Error?) {
+        guard let response = response else {
+            if let error = error {
+                delegate?.didFailDownloadUserDetailsWithError(error: error)
+            }
+            return
+        }
+        
         if let user = User(json: response) {
             delegate?.didReceiveUserDetails(user: user)
         }

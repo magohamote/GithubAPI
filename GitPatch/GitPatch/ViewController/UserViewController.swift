@@ -19,9 +19,9 @@ class UserViewController: UIViewController {
     private var isDownloadingRepos = false
     private var isDownloadingFollowers = false
     private var followersArray = [User]()
-    private let repoDataSource = RepoViewModel()
-    private let userDetailsDataSource = UserDetailsViewModel()
-    private let followersDataSource = FollowersViewModel()
+    private let repoDataSource = RepoViewModel(service: Service())
+    private let userDetailsDataSource = UserDetailsViewModel(service: Service())
+    private let followersDataSource = FollowersViewModel(service: Service())
     private var storedOffsets = [Int: CGFloat]()
     private var reposArray = [Repo](){
         didSet {

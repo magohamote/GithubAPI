@@ -16,33 +16,25 @@ protocol FollowersViewModelDelegate: class {
 
 class FollowersViewModel {
     
-    typealias UserFollowersResult = [[String: Any]]
-    
     weak var delegate: FollowersViewModelDelegate?
     
-    func requestUserFollowers(url: String) {
-        Alamofire.request(url).responseJSON { response in
-            
-            guard response.result.isSuccess else {
-                if let error = response.result.error {
-                    os_log("Error while fetching followers: %@", log: OSLog.default, type: .debug, "\(error)")
-                    self.delegate?.didFailDownloadFollowersWithError(error: error)
-                }
-                return
-            }
-            
-            guard let responseJSON = response.result.value as? UserFollowersResult else {
-                os_log("Invalid data received from the service", log: OSLog.default, type: .debug)
-                os_log("data: %@", log: OSLog.default, type: .debug, response.result.value.debugDescription)
-                self.delegate?.didFailDownloadFollowersWithError(error: FormatError.badFormatError)
-                return
-            }
-            
-            self.setUsersFollowers(withResponse: responseJSON)
-        }
+    private let service: Service
+    
+    init(service: Service) {
+        self.service = service
     }
     
-    private func setUsersFollowers(withResponse response: UserFollowersResult) {
+    func requestUserFollowers(url: String) {
+        service.requestUserFollowers(url: url, completion: setUsersFollowers)
+    }
+    
+    private func setUsersFollowers(withResponse response: Service.MultipleResult?, error: Error?) {
+        guard let response = response else {
+            if let error = error {
+                delegate?.didFailDownloadFollowersWithError(error: error)
+            }
+            return
+        }
         var followersArray = [User]()
         
         for data in response {

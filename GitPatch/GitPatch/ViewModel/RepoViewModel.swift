@@ -16,33 +16,25 @@ protocol RepoViewModelDelegate: class {
 
 class RepoViewModel {
     
-    typealias ReposResult = [[String: Any]]
-    
     weak var delegate: RepoViewModelDelegate?
     
-    func requestUserRepos(url: String) {
-        Alamofire.request(url).responseJSON { response in
-            
-            guard response.result.isSuccess else {
-                if let error = response.result.error {
-                    os_log("Error while fetching repositories: %@", log: OSLog.default, type: .debug, "\(error)")
-                    self.delegate?.didFailDownloadReposWithError(error: error)
-                }
-                return
-            }
-            
-            guard let responseJSON = response.result.value as? ReposResult else {
-                os_log("Invalid data received from the service", log: OSLog.default, type: .debug)
-                os_log("data: %@", log: OSLog.default, type: .debug, response.result.value.debugDescription)
-                self.delegate?.didFailDownloadReposWithError(error: FormatError.badFormatError)
-                return
-            }
-            
-            self.setUserRepos(withResponse: responseJSON)
-        }
+    private let service: Service
+    
+    init(service: Service) {
+        self.service = service
     }
     
-    private func setUserRepos(withResponse response: ReposResult) {
+    func requestUserRepos(url: String) {
+        service.requestUserRepos(url: url, completion: setUserRepos)
+    }
+    
+    private func setUserRepos(withResponse response: Service.MultipleResult?, error: Error?) {
+        guard let response = response else {
+            if let error = error {
+                delegate?.didFailDownloadReposWithError(error: error)
+            }
+            return
+        }
         var reposArray = [Repo]()
         
         for data in response {

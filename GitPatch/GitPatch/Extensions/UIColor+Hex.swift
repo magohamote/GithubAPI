@@ -19,15 +19,6 @@ extension UIColor {
         )
     }
     
-    convenience init(rgb: String) {
-        self.init(
-            red: CGFloat((Int(rgb, radix: 16)! & 0xFF0000) >> 16) / 255.0,
-            green: CGFloat((Int(rgb, radix: 16)! & 0x00FF00) >> 8) / 255.0,
-            blue: CGFloat(Int(rgb, radix: 16)! & 0x0000FF) / 255.0,
-            alpha: CGFloat(1.0)
-        )
-    }
-    
     static var anthracite: UIColor {
         return UIColor(rgb: 0x4a4f51)
     }
