@@ -44,7 +44,7 @@ struct User: Codable {
             let avatarUrl = json?["avatar_url"] as? String,
             let followersUrl = json?["followers_url"] as? String,
             let reposUrl = json?["repos_url"] as? String {
-            
+
             self.login = login
             self.id = id
             self.url = url
@@ -54,11 +54,10 @@ struct User: Codable {
         } else {
             return nil
         }
-        
+
         location = json?["location"] as? String
         repos = json?["public_repos"] as? Int
         followers = json?["followers"] as? Int
         following = json?["following"] as? Int
     }
 }
-

@@ -33,7 +33,7 @@ class UserViewController: UIViewController {
         super.viewDidLoad()
         
         guard let user = user else {
-            showError(withMessage: "An error occured while presenting user details.")
+            showMessage(withTitle: "Error", message: "An error occured while presenting user details.")
             return
         }
         
@@ -217,7 +217,7 @@ extension UserViewController: RepoViewModelDelegate {
     
     func didFailDownloadReposWithError(error: Error) {
         isDownloadingRepos = false
-        showError(withMessage: "An error occured while downloading repositories.")
+        showMessage(withTitle: "Error", message: "An error occured while downloading repositories.")
     }
 }
 
@@ -228,7 +228,7 @@ extension UserViewController: UserDetailViewModelDelegate {
     }
     
     func didFailDownloadUserDetailsWithError(error: Error) {
-        showError(withMessage: "An error occured while downloading user details.")
+        showMessage(withTitle: "Error", message: "An error occured while downloading user details.")
     }
 }
 
@@ -241,6 +241,6 @@ extension UserViewController: FollowerViewModelDelegate {
     
     func didFailDownloadFollowersWithError(error: Error) {
         isDownloadingFollowers = false
-        showError(withMessage: "An error occured while downloading followers.")
+        showMessage(withTitle: "Error", message: "An error occured while downloading followers.")
     }
 }

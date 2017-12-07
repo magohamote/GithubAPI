@@ -11,7 +11,7 @@ import UIKit
 
 class UserListViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
-    @IBOutlet var noDataView: UIView!
+    @IBOutlet var noDataLabel: UILabel!
     
     private var lastUserIndex = 0
     private var storedOffsets = [Int: CGFloat]()
@@ -24,6 +24,7 @@ class UserListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        noDataLabel.alpha = 0
         title = "Gitpatch"
         dataSource.delegate = self
         tableView.delegate = self
@@ -41,26 +42,39 @@ class UserListViewController: UIViewController {
     
     func downloadData(lastUserIndex: Int) {
         if Reachability.isConnected() {
-            tableView.alpha = 1
+            showTableHideLabel()
             dataSource.requestUserList(since: lastUserIndex)
             self.lastUserIndex += 30
             print("downloading")
         } else if let users = dataSource.loadUsers() {
-            tableView.alpha = 1
             usersArray = users
             if usersArray.count == 0 {
-                tableView.alpha = 0
+                hideTableShowLabel()
             } else {
                 tableView.reloadData()
             }
             hideLoadingView(tableView: tableView)
         } else {
-            tableView.alpha = 0
+            hideTableShowLabel()
         }
     }
     
     @objc func pop(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)
+    }
+    
+    func hideTableShowLabel() {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.noDataLabel.alpha = 1
+            self.tableView.alpha = 0
+        })
+    }
+    
+    func showTableHideLabel() {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.noDataLabel.alpha = 0
+            self.tableView.alpha = 1
+        })
     }
 }
 
@@ -110,11 +124,11 @@ extension UserListViewController: UserViewModelDelegate {
     
     func didFailDownloadUsersListWithError(error: Error) {
         hideLoadingView(tableView: tableView)
-        showError(withMessage: "An error occured while downloading users list.")
+        showMessage(withTitle: "Error", message: "An error occured while downloading users list.")
         if usersArray.count == 0 {
-            tableView.alpha = 0
+            hideTableShowLabel()
         } else {
-            tableView.alpha = 1
+            showTableHideLabel()
         }
     }
 }
