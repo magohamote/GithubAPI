@@ -15,7 +15,7 @@ protocol UserViewModelDelegate: class {
 }
 
 class UserViewModel {
-        
+    
     weak var delegate: UserViewModelDelegate?
     
     internal var service = Service()
@@ -47,7 +47,7 @@ class UserViewModel {
             delegate?.didReceiveUsersList(users: usersArray)
         }
     }
-
+    
     func saveUsers(users: [User]) {
         do {
             var data = Data()
@@ -79,3 +79,4 @@ class UserViewModel {
         }
     }
 }
+

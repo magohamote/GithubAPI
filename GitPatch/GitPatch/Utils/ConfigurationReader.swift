@@ -30,7 +30,7 @@ class ConfigurationReader {
         }
         colors = [:]
     }
-
+    
     func color(forKey key: String) -> UIColor {
         if let color = colors[key], let colorInt = UInt(color, radix: 16) {
             return UIColor(rgb: colorInt)
@@ -38,3 +38,4 @@ class ConfigurationReader {
         return .clear
     }
 }
+

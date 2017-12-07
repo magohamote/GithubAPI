@@ -19,7 +19,7 @@ class UserDetailViewModel {
     weak var delegate: UserDetailViewModelDelegate?
     
     internal var service = Service()
-
+    
     func requestUserDetails(url: String) {
         service.requestUserDetails(url: url, completion: setUserDetails)
     }
@@ -41,3 +41,4 @@ class UserDetailViewModel {
         }
     }
 }
+

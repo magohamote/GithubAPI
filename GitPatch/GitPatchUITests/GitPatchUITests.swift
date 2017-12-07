@@ -85,3 +85,4 @@ class GitPatchUITests: XCTestCase {
         showUsersButton.tap()
     }
 }
+
