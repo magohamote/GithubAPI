@@ -36,35 +36,7 @@ class RepoCell: UITableViewCell {
         repoDescriptionLabel.text = repo.repoDescription
         starsCountLabel.text = repo.stargazersCount.formattedWithSeparator
         forksCountLabel.text = repo.forksCount.formattedWithSeparator
-        updatedAtLabel.text = "Updated on \(configDate(withString: repo.updatedAt))"
-        
-        configDot(withLanguage: repo.language ?? "")
-    }
-    
-    func configDate(withString dateString: String) -> String {
-        let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        
-        let date: Date? = dateFormatterGet.date(from: dateString)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .none
-        dateFormatter.locale = Locale(identifier: "en_US")
-        if let date = date {
-            return dateFormatter.string(from: date)
-        }
-        return "unknown"
-    }
-    
-    func configDot(withLanguage language: String) {
-        let xCoord = 4
-        let yCoord = 4
-        let radius = 8
-        let dotPath = UIBezierPath(ovalIn: CGRect(x: xCoord, y: yCoord, width: radius, height: radius))
-        let layer = CAShapeLayer()
-        layer.path = dotPath.cgPath
-        layer.strokeColor = ConfigurationReader.sharedInstance.color(forKey: language).cgColor
-        layer.fillColor = ConfigurationReader.sharedInstance.color(forKey: language).cgColor
-        languageDotView.layer.addSublayer(layer)
+        updatedAtLabel.text = "Updated on \(repo.updatedAt.toDateFormat() ?? "unknown")"
+        languageDotView.drawDot(withLanguage: repo.language ?? "")
     }
 }

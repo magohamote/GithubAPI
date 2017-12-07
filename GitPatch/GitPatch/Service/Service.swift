@@ -14,7 +14,6 @@ class Service {
     
     typealias MultipleResult = [[String: Any]]
     typealias UniqueResult = [String: Any]
-    
     private static let userListUrl = "https://api.github.com/users?since="
     
     func requestUserList(since: Int, completion: @escaping (_ response: MultipleResult?, _ error: Error?) -> Void) {

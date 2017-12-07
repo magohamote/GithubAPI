@@ -6,7 +6,6 @@
 //  Copyright © 2017 Rolland Cédric. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 class UserListViewController: UIViewController {
@@ -45,14 +44,10 @@ class UserListViewController: UIViewController {
             showTableHideLabel()
             dataSource.requestUserList(since: lastUserIndex)
             self.lastUserIndex += 30
-            print("downloading")
+        
         } else if let users = dataSource.loadUsers() {
             usersArray = users
-            if usersArray.count == 0 {
-                hideTableShowLabel()
-            } else {
-                tableView.reloadData()
-            }
+            usersArray.count == 0 ? hideTableShowLabel() : tableView.reloadData()
             hideLoadingView(tableView: tableView)
         } else {
             hideTableShowLabel()
