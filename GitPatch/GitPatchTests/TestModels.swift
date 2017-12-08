@@ -47,10 +47,14 @@ class TestModels: XCTestCase {
         
         do {
             let jsonData = try JSONSerialization.jsonObject(with: data!, options: []) as? [String : Any]
-            XCTAssertNotNil(Repo(json: jsonData))
+            XCTAssertNotNil(Repo(withJson: jsonData))
         } catch {
             XCTFail()
         }
+    }
+    
+    func testSuccessfulRepoInit() {
+        XCTAssertNotNil(Repo.init(name: "test", stargazersCount: 0, language: "test", forksCount: 0, repoDescription: "test", updatedAt: "test"))
     }
     
     func testFailingRepoJsonInit() {
@@ -58,7 +62,7 @@ class TestModels: XCTestCase {
         
         do {
             let jsonData = try JSONSerialization.jsonObject(with: data!, options: []) as? [String : Any]
-            XCTAssertNil(Repo(json: jsonData))
+            XCTAssertNil(Repo(withJson: jsonData))
         } catch {
             XCTFail()
         }

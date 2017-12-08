@@ -13,6 +13,11 @@ class NavigationController: UINavigationController, UIViewControllerTransitionin
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // background of Navigation Controller is visible during transition
+        // so I changed the color to match the rest
+        let win = UIApplication.shared.delegate?.window
+        win??.backgroundColor = .white
+        
         navigationBar.barTintColor = .navyBlue
         navigationBar.isTranslucent = false
         navigationBar.prefersLargeTitles = true

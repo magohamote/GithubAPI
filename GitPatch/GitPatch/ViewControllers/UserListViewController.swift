@@ -9,11 +9,11 @@
 import UIKit
 
 class UserListViewController: UIViewController {
+    
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet var noDataLabel: UILabel!
     
     private var lastUserIndex = 0
-    private var storedOffsets = [Int: CGFloat]()
     private let dataSource = UserViewModel()
     internal var usersArray = [User]() {
         didSet {
@@ -23,8 +23,9 @@ class UserListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        noDataLabel.alpha = 0
         title = "Gitpatch"
+        noDataLabel.alpha = 0
+        
         dataSource.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
@@ -36,14 +37,14 @@ class UserListViewController: UIViewController {
         if Reachability.isConnected() {
             showLoadingView()
         }
-        downloadData(lastUserIndex: lastUserIndex)
+        downloadData()
     }
     
-    func downloadData(lastUserIndex: Int) {
+    func downloadData() {
         if Reachability.isConnected() {
             showTableHideLabel()
             dataSource.requestUserList(since: lastUserIndex)
-            self.lastUserIndex += 30
+            lastUserIndex += 30
         
         } else if let users = dataSource.loadUsers() {
             usersArray = users
@@ -104,7 +105,7 @@ extension UserListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == usersArray.count - 5 && Reachability.isConnected() {
-            downloadData(lastUserIndex: lastUserIndex)
+            downloadData()
         }
     }
 }
@@ -119,7 +120,7 @@ extension UserListViewController: UserViewModelDelegate {
     
     func didFailDownloadUsersListWithError(error: Error) {
         hideLoadingView(tableView: tableView)
-        showMessage(withTitle: "Error", message: "An error occured while downloading users list.")
+        showError(withMessage: "An error occured while downloading users list.")
         if usersArray.count == 0 {
             hideTableShowLabel()
         } else {

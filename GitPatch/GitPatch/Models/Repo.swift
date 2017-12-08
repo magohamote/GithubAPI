@@ -8,7 +8,11 @@
 
 import Foundation
 
-class Repo: NSObject {
+struct Repo: Codable {
+    
+    static let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
+    static let ArchiveURL = DocumentsDirectory.appendingPathComponent("repos")
+    
     var name: String
     var stargazersCount: Int
     var language: String?
@@ -16,7 +20,16 @@ class Repo: NSObject {
     var repoDescription: String?
     var updatedAt: String
     
-    init?(json: [String : Any]?) {
+    init(name: String, stargazersCount: Int, language: String?, forksCount: Int, repoDescription: String?, updatedAt: String) {
+        self.name = name
+        self.stargazersCount = stargazersCount
+        self.language = language
+        self.forksCount = forksCount
+        self.repoDescription = repoDescription
+        self.updatedAt = updatedAt
+    }
+    
+    init?(withJson json: [String : Any]?) {
         if let name = json?["name"] as? String,
             let stargazersCount = json?["stargazers_count"] as? Int,
             let forksCount = json?["forks_count"] as? Int,

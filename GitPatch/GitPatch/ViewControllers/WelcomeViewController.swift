@@ -27,7 +27,7 @@ class WelcomeViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        UIView.animate(withDuration: 1.25, animations: {() -> Void in
+        UIView.animate(withDuration: 1, animations: {() -> Void in
             self.welcomeLabel.alpha = 1
             self.messageLabel.alpha = 1
         })

@@ -18,8 +18,8 @@ class UserDetailsCell: UITableViewCell {
     @IBOutlet var locationIconImageView: UIImageView!
     @IBOutlet var locationLabel: UILabel!
 
-    func config(withUser user: User?, imageUrl: String) {
-        if let avatarUrl = URL(string: imageUrl) {
+    func config(withUser user: User?) {
+        if let user = user, let avatarUrl = URL(string: user.avatarUrl) {
             userImageView.sd_setImage(with: avatarUrl, placeholderImage:UIImage(named: "placeholder"), completed: nil)
         }
         userImageView.layer.cornerRadius = 5

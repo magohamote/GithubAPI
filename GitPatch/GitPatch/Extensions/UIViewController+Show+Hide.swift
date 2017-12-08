@@ -11,8 +11,8 @@ import UIKit
 extension UIViewController {
     
     // MARK: - Errors
-    func showMessage(withTitle title: String, message: String) {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+    func showError(withMessage message: String) {
+        let alertController = UIAlertController(title: "Error", message: message, preferredStyle: UIAlertControllerStyle.alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil)
         
         alertController.addAction(okAction)

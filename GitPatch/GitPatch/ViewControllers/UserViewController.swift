@@ -14,14 +14,17 @@ class UserViewController: UIViewController {
     
     var user: User?
     
-    private var userDetails: User?
     private var isDownloadingRepos = false
     private var isDownloadingFollowers = false
-    private var followersArray = [User]()
     private let repoDataSource = RepoViewModel()
     private let userDetailDataSource = UserDetailViewModel()
     private let followerDataSource = FollowerViewModel()
     private var storedOffsets = [Int: CGFloat]()
+    private var followersArray = [User](){
+        didSet {
+            updateSection(section: 1)
+        }
+    }
     private var reposArray = [Repo](){
         didSet {
             updateSection(section: 2)
@@ -32,14 +35,17 @@ class UserViewController: UIViewController {
         super.viewDidLoad()
         
         guard let user = user else {
-            showMessage(withTitle: "Error", message: "An error occured while presenting user details.")
+            showError(withMessage: "An error occured while presenting user details.")
             return
         }
         
         title = user.login
         setDs()
+        
         if Reachability.isConnected() {
             downloadData(withUser: user)
+        } else if let repos = repoDataSource.loadRepos(forUserId: String(user.id)) {
+            reposArray = repos
         }
     }
     
@@ -88,8 +94,8 @@ extension UserViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            if let cell = tableView.dequeueReusableCell(withIdentifier: UserDetailsCell.identifier) as? UserDetailsCell, let imageUrl = user?.avatarUrl {
-                cell.config(withUser: userDetails, imageUrl: imageUrl)
+            if let cell = tableView.dequeueReusableCell(withIdentifier: UserDetailsCell.identifier) as? UserDetailsCell {
+                cell.config(withUser: user)
                 return cell
             }
         case 1:
@@ -173,14 +179,7 @@ extension UserViewController: UITableViewDelegate {
     
     func bigHeader(withTitle title: String) -> UITableViewHeaderFooterView {
         let header = UITableViewHeaderFooterView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 70))
-        header.contentView.backgroundColor = .backgroundGray
-        let labelHeight:CGFloat = 34
-        let headerLabel = UILabel(frame: CGRect(x: 20, y: header.frame.height/2 - labelHeight/2 - 5 , width: view.frame.width - 40, height: labelHeight))
-        headerLabel.text = title
-        headerLabel.font = UIFont(name: "Roboto-Medium", size: 25)
-        headerLabel.textColor = .anthracite
-        header.addSubview(headerLabel)
-        return header
+        return header.bigHeader(withTitle: title)
     }
 }
 
@@ -211,23 +210,25 @@ extension UserViewController: RepoViewModelDelegate {
     func didReceiveRepos(repos: [Repo]) {
         isDownloadingRepos = false
         reposArray = repos
-        updateSection(section: 0)
+        if let id = user?.id {
+            repoDataSource.saveRepos(forUserId: String(id), repos: repos)
+        }
     }
     
     func didFailDownloadReposWithError(error: Error) {
         isDownloadingRepos = false
-        showMessage(withTitle: "Error", message: "An error occured while downloading repositories.")
+        showError(withMessage: "An error occured while downloading repositories.")
     }
 }
 
 extension UserViewController: UserDetailViewModelDelegate {
     func didReceiveUserDetails(user: User) {
-        self.userDetails = user
+        self.user = user
         updateSection(section: 0)
     }
     
     func didFailDownloadUserDetailsWithError(error: Error) {
-        showMessage(withTitle: "Error", message: "An error occured while downloading user details.")
+        showError(withMessage: "An error occured while downloading user details.")
     }
 }
 
@@ -235,11 +236,10 @@ extension UserViewController: FollowerViewModelDelegate {
     func didReceiveUsersFollowers(followers: [User]) {
         isDownloadingFollowers = false
         followersArray = followers
-        updateSection(section: 1)
     }
     
     func didFailDownloadFollowersWithError(error: Error) {
         isDownloadingFollowers = false
-        showMessage(withTitle: "Error", message: "An error occured while downloading followers.")
+        showError(withMessage: "An error occured while downloading followers.")
     }
 }
