@@ -13,10 +13,10 @@ import Alamofire
 
 class TestFailingViewModels: XCTestCase, UserViewModelDelegate, UserDetailViewModelDelegate, FollowerViewModelDelegate, RepoViewModelDelegate {
     
-    var userViewModel: UserViewModel!
-    var userDetailViewModel: UserDetailViewModel!
-    var followerViewModel: FollowerViewModel!
-    var repoViewModel: RepoViewModel!
+    var userViewModel: UserViewModel?
+    var userDetailViewModel: UserDetailViewModel?
+    var followerViewModel: FollowerViewModel?
+    var repoViewModel: RepoViewModel?
     
     override func setUp() {
         super.setUp()
@@ -26,15 +26,15 @@ class TestFailingViewModels: XCTestCase, UserViewModelDelegate, UserDetailViewMo
         followerViewModel = FollowerViewModel()
         repoViewModel = RepoViewModel()
         
-        userViewModel.service = MockService()
-        userDetailViewModel.service = MockService()
-        followerViewModel.service = MockService()
-        repoViewModel.service = MockService()
+        userViewModel?.service = MockService()
+        userDetailViewModel?.service = MockService()
+        followerViewModel?.service = MockService()
+        repoViewModel?.service = MockService()
         
-        userViewModel.delegate = self
-        userDetailViewModel.delegate = self
-        followerViewModel.delegate = self
-        repoViewModel.delegate = self
+        userViewModel?.delegate = self
+        userDetailViewModel?.delegate = self
+        followerViewModel?.delegate = self
+        repoViewModel?.delegate = self
     }
     
     override func tearDown() {
@@ -48,7 +48,7 @@ class TestFailingViewModels: XCTestCase, UserViewModelDelegate, UserDetailViewMo
     // MARK: - User View Model
     
     func testFailingUserViewModel() {
-        userViewModel.requestUserList(since: 2)
+        userViewModel?.requestUserList(since: 2)
     }
     
     func didReceiveUsersList(users: [User]) {
@@ -63,7 +63,7 @@ class TestFailingViewModels: XCTestCase, UserViewModelDelegate, UserDetailViewMo
     // MARK: - User Details View Model
     
     func testFailingUserDetailsViewModel() {
-        userDetailViewModel.requestUserDetails(url: "bad_json")
+        userDetailViewModel?.requestUserDetails(url: "bad_json")
     }
     
     func didReceiveUserDetails(user: User) {
@@ -78,7 +78,7 @@ class TestFailingViewModels: XCTestCase, UserViewModelDelegate, UserDetailViewMo
     // MARK: - Followers View Model
     
     func testFailingFollowersViewModel() {
-        followerViewModel.requestUserFollowers(url: "bad_json")
+        followerViewModel?.requestUserFollowers(url: "bad_json")
     }
     
     func didReceiveUsersFollowers(followers: [User]) {
@@ -92,7 +92,7 @@ class TestFailingViewModels: XCTestCase, UserViewModelDelegate, UserDetailViewMo
     
     // MARK: - Repos View Model
     func testFailingRepoViewModel() {
-        repoViewModel.requestUserRepos(url: "bad_json")
+        repoViewModel?.requestUserRepos(url: "bad_json")
     }
     
     func didReceiveRepos(repos: [Repo]) {

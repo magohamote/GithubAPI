@@ -10,14 +10,14 @@ target 'GitPatch' do
   pod 'SDWebImage'
 
   target 'GitPatchTests' do
-    inherit! :search_paths
     # Pods for testing
+    inherit! :search_paths
     pod 'Alamofire'
   end
 
   target 'GitPatchUITests' do
-    inherit! :search_paths
     # Pods for testing
+    inherit! :search_paths
     pod 'Alamofire'
   end
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		828E536C21B182AD001FDAAD /* Collection+SafeIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828E536B21B182AD001FDAAD /* Collection+SafeIndex.swift */; };
 		93DD8B3E41A18FF68347C6C4 /* Pods_GitPatchTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CE591BEFC03FCC55BA375EE /* Pods_GitPatchTests.framework */; };
 		98EFC7EB44A2121D6895ADEC /* Pods_GitPatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 524FDD21C2961537F7238185 /* Pods_GitPatch.framework */; };
 		CC45C0F5F775226367D6B2D4 /* Pods_GitPatchUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB96953C3F89CD5497BC4F1B /* Pods_GitPatchUITests.framework */; };
@@ -97,6 +98,7 @@
 		59D463135FCFFAF4E89DF96C /* Pods-GitPatchUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitPatchUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-GitPatchUITests/Pods-GitPatchUITests.release.xcconfig"; sourceTree = "<group>"; };
 		5B201826EA4AECFBF97C68FE /* Pods-GitPatch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitPatch.release.xcconfig"; path = "Pods/Target Support Files/Pods-GitPatch/Pods-GitPatch.release.xcconfig"; sourceTree = "<group>"; };
 		5CE591BEFC03FCC55BA375EE /* Pods_GitPatchTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GitPatchTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		828E536B21B182AD001FDAAD /* Collection+SafeIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+SafeIndex.swift"; sourceTree = "<group>"; };
 		BB2FD9BA8E8B50A4E721F263 /* Pods-GitPatchUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitPatchUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GitPatchUITests/Pods-GitPatchUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		CB96953C3F89CD5497BC4F1B /* Pods_GitPatchUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GitPatchUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC095FCC1FD971BA00C9828F /* TestModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModels.swift; sourceTree = "<group>"; };
@@ -407,6 +409,7 @@
 				FC797A2C1FD9F520006B6EC3 /* UIView+DrawDot.swift */,
 				FC797A2E1FD9F5F1006B6EC3 /* String+Date.swift */,
 				FC797A321FDA0C27006B6EC3 /* UITableViewHeaderFooterView+BigTitle.swift */,
+				828E536B21B182AD001FDAAD /* Collection+SafeIndex.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -784,6 +787,7 @@
 				FC2416D71FD5FF0800EE36D3 /* UserCell.swift in Sources */,
 				FCBE639F1FD85CAB00253C04 /* WelcomeViewController.swift in Sources */,
 				FC797A2D1FD9F520006B6EC3 /* UIView+DrawDot.swift in Sources */,
+				828E536C21B182AD001FDAAD /* Collection+SafeIndex.swift in Sources */,
 				FCBE63971FD80FCF00253C04 /* NoDataCell.swift in Sources */,
 				FC24168E1FD5B4F700EE36D3 /* User.swift in Sources */,
 				FC2416D91FD6070D00EE36D3 /* UIViewController+Show+Hide.swift in Sources */,
@@ -976,6 +980,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 847P2LXN5F;
+				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/SDWebImage\"";
 				INFOPLIST_FILE = GitPatch/Info.plist;
 				INFOPLIST_PREFIX_HEADER = "";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -993,6 +998,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 847P2LXN5F;
+				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/SDWebImage\"";
 				INFOPLIST_FILE = GitPatch/Info.plist;
 				INFOPLIST_PREFIX_HEADER = "";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

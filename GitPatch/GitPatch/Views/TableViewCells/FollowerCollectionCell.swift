@@ -10,21 +10,21 @@ import UIKit
 
 class FollowerCollectionCell: UITableViewCell {
     
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var collectionView: UICollectionView?
 
     var collectionViewOffset: CGFloat {
         get {
-            return collectionView.contentOffset.x
+            return collectionView?.contentOffset.x ?? 0
         }
         set {
-            collectionView.contentOffset.x = newValue
+            collectionView?.contentOffset.x = newValue
         }
     }
     
     func setCollectionViewDataSourceDelegate
         <D: UICollectionViewDataSource & UICollectionViewDelegate>
         (dataSourceDelegate: D, forRow row: Int) {
-        collectionView.delegate = dataSourceDelegate
-        collectionView.dataSource = dataSourceDelegate
+        collectionView?.delegate = dataSourceDelegate
+        collectionView?.dataSource = dataSourceDelegate
     }
 }

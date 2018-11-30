@@ -13,10 +13,10 @@ import Alamofire
 
 class TestViewModels: XCTestCase, UserViewModelDelegate, UserDetailViewModelDelegate, FollowerViewModelDelegate, RepoViewModelDelegate {
     
-    var userViewModel: UserViewModel!
-    var userDetailViewModel: UserDetailViewModel!
-    var followerViewModel: FollowerViewModel!
-    var repoViewModel: RepoViewModel!
+    var userViewModel: UserViewModel?
+    var userDetailViewModel: UserDetailViewModel?
+    var followerViewModel: FollowerViewModel?
+    var repoViewModel: RepoViewModel?
     
     override func setUp() {
         super.setUp()
@@ -26,15 +26,15 @@ class TestViewModels: XCTestCase, UserViewModelDelegate, UserDetailViewModelDele
         followerViewModel = FollowerViewModel()
         repoViewModel = RepoViewModel()
         
-        userViewModel.service = MockService()
-        userDetailViewModel.service = MockService()
-        followerViewModel.service = MockService()
-        repoViewModel.service = MockService()
+        userViewModel?.service = MockService()
+        userDetailViewModel?.service = MockService()
+        followerViewModel?.service = MockService()
+        repoViewModel?.service = MockService()
         
-        userViewModel.delegate = self
-        userDetailViewModel.delegate = self
-        followerViewModel.delegate = self
-        repoViewModel.delegate = self
+        userViewModel?.delegate = self
+        userDetailViewModel?.delegate = self
+        followerViewModel?.delegate = self
+        repoViewModel?.delegate = self
     }
     
     override func tearDown() {
@@ -48,7 +48,7 @@ class TestViewModels: XCTestCase, UserViewModelDelegate, UserDetailViewModelDele
     // MARK: - User View Model
     
     func testUserViewModel() {
-        userViewModel.requestUserList(since: 0)
+        userViewModel?.requestUserList(since: 0)
     }
     
     func didReceiveUsersList(users: [User]) {
@@ -73,7 +73,7 @@ class TestViewModels: XCTestCase, UserViewModelDelegate, UserDetailViewModelDele
     // MARK: - User Details View Model
     
     func testUserDetailsViewModel() {
-        userDetailViewModel.requestUserDetails(url: "user_details")
+        userDetailViewModel?.requestUserDetails(url: "user_details")
     }
     
     func didReceiveUserDetails(user: User) {
@@ -97,7 +97,7 @@ class TestViewModels: XCTestCase, UserViewModelDelegate, UserDetailViewModelDele
     // MARK: - Followers View Model
     
     func testFollowersViewModel() {
-        followerViewModel.requestUserFollowers(url: "followers")
+        followerViewModel?.requestUserFollowers(url: "followers")
     }
     
     func didReceiveUsersFollowers(followers: [User]) {
@@ -121,7 +121,7 @@ class TestViewModels: XCTestCase, UserViewModelDelegate, UserDetailViewModelDele
     
     // MARK: - Repos View Model
     func testRepoViewModel() {
-        repoViewModel.requestUserRepos(url: "repos")
+        repoViewModel?.requestUserRepos(url: "repos")
     }
     
     func didReceiveRepos(repos: [Repo]) {

@@ -10,7 +10,7 @@ import XCTest
 
 class GitPatchUITests: XCTestCase {
     
-    var app:XCUIApplication!
+    var app:XCUIApplication?
     
     override func setUp() {
         super.setUp()
@@ -25,6 +25,11 @@ class GitPatchUITests: XCTestCase {
     }
     
     func testShowUsersList() {
+        guard let app = app else {
+            XCTFail()
+            return
+        }
+        
         showUser()
         let navBar = app.navigationBars["Gitpatch"]
         XCTAssertTrue(navBar.exists)
@@ -36,6 +41,11 @@ class GitPatchUITests: XCTestCase {
     }
     
     func testInfinitScrollUser() {
+        guard let app = app else {
+            XCTFail()
+            return
+        }
+        
         showUser()
         let usersTable = app.tables["usersTable"]
         XCTAssertNotNil(usersTable)
@@ -45,6 +55,11 @@ class GitPatchUITests: XCTestCase {
     }
     
     func testUserDetails() {
+        guard let app = app else {
+            XCTFail()
+            return
+        }
+        
         showUser()
         let usersTable = app.tables["usersTable"]
         XCTAssertNotNil(usersTable)
@@ -66,6 +81,11 @@ class GitPatchUITests: XCTestCase {
     }
     
     func testUserReccurency() {
+        guard let app = app else {
+            XCTFail()
+            return
+        }
+        
         showUser()
         let usersTable = app.tables["usersTable"]
         XCTAssertNotNil(usersTable)
@@ -80,6 +100,11 @@ class GitPatchUITests: XCTestCase {
     }
     
     func showUser() {
+        guard let app = app else {
+            XCTFail()
+            return
+        }
+        
         let showUsersButton = app.buttons["showUsersButton"]
         XCTAssertNotNil(showUsersButton)
         showUsersButton.tap()

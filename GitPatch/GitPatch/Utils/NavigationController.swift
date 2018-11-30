@@ -9,10 +9,10 @@
 import UIKit
 
 class NavigationController: UINavigationController, UIViewControllerTransitioningDelegate {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // background of Navigation Controller is visible during transition
         // so I changed the color to match the rest
         let win = UIApplication.shared.delegate?.window
@@ -21,13 +21,20 @@ class NavigationController: UINavigationController, UIViewControllerTransitionin
         navigationBar.barTintColor = .navyBlue
         navigationBar.isTranslucent = false
         navigationBar.prefersLargeTitles = true
+        
+        guard let font17 = UIFont(name: "Roboto-Medium", size: 17),
+            let font30 = UIFont(name: "Roboto-Medium", size: 30) else {
+                return
+        }
+        
         navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.foregroundColor : UIColor.white,
-            NSAttributedStringKey.font : UIFont(name: "Roboto-Medium", size: 17)!
+            .foregroundColor : UIColor.white,
+            .font : font17
         ]
+        
         navigationBar.largeTitleTextAttributes = [
-            NSAttributedStringKey.foregroundColor : UIColor.white,
-            NSAttributedStringKey.font : UIFont(name: "Roboto-Medium", size: 30)!
+            .foregroundColor : UIColor.white,
+            .font : font30
         ]
     }
 }

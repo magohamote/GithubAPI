@@ -10,8 +10,8 @@ import Foundation
 
 struct User: Codable {
     
-    static let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
-    static let ArchiveURL = DocumentsDirectory.appendingPathComponent("users")
+    static let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first
+    static let ArchiveURL = DocumentsDirectory?.appendingPathComponent("users")
     
     var login: String
     var id: Int

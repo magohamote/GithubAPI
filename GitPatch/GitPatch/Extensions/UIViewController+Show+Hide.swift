@@ -20,12 +20,9 @@ extension UIViewController {
     }
     
     // MARK: - Loading
-    func showLoadingView() {
-        // need to substract status bar and nav bar height in order to have the loading wheel at the center.
-        let statusBarHeight = UIApplication.shared.statusBarFrame.size.height
-        let navBarHeight = self.navigationController?.navigationBar.frame.size.height
-        let loadingView = UIView(frame: CGRect(origin: view.frame.origin, size: CGSize(width: view.frame.width, height: view.frame.height - statusBarHeight - (navBarHeight ?? 0))))
-        loadingView.tag = 42
+    func createLoadingView() -> UIView {
+        
+        let loadingView = UIView(frame: CGRect(origin: view.bounds.origin, size: CGSize(width: view.bounds.width, height: view.bounds.height)))
         loadingView.backgroundColor = .white
         
         let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
@@ -34,19 +31,6 @@ extension UIViewController {
         loadingIndicator.startAnimating()
         
         loadingView.addSubview(loadingIndicator)
-        view.addSubview(loadingView)
-    }
-    
-    func hideLoadingView(tableView: UITableView) {
-        tableView.separatorColor = .backgroundGray
-        tableView.refreshControl?.endRefreshing()
-        
-        let loadingView = self.view.viewWithTag(42)
-        
-        UIView.animate(withDuration: 0.25, animations: {
-            loadingView?.alpha = 0
-        }, completion: { _ in
-            loadingView?.removeFromSuperview()
-        })
+        return loadingView
     }
 }

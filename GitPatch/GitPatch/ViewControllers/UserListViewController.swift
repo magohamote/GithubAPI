@@ -10,12 +10,18 @@ import UIKit
 
 class UserListViewController: UIViewController {
     
-    @IBOutlet private weak var tableView: UITableView!
-    @IBOutlet var noDataLabel: UILabel!
+    @IBOutlet private weak var tableView: UITableView?
+    @IBOutlet private weak var noDataLabel: UILabel?
     
+    private var loadingView: UIView?
+    
+    private let animationDuration = 0.5
+    private let userPageSize = 30
     private var lastUserIndex = 0
+    
     private let dataSource = UserViewModel()
-    internal var usersArray = [User]() {
+    
+    private var usersArray = [User]() {
         didSet {
             tableView?.reloadData()
         }
@@ -24,72 +30,73 @@ class UserListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Gitpatch"
-        noDataLabel.alpha = 0
+        noDataLabel?.alpha = 0
         
         dataSource.delegate = self
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.separatorColor = .clear
+        tableView?.delegate = self
+        tableView?.dataSource = self
+        tableView?.tableFooterView = UIView()
         
         let pop = UIBarButtonItem(image: UIImage(named: "up-arrow"), style: .plain, target: self, action: #selector(pop(_:)))
         navigationItem.rightBarButtonItem = pop
         
         if Reachability.isConnected() {
-            showLoadingView()
+            loadingView = createLoadingView()
         }
         downloadData()
     }
     
-    func downloadData() {
+   private func downloadData() {
         if Reachability.isConnected() {
             showTableHideLabel()
             dataSource.requestUserList(since: lastUserIndex)
-            lastUserIndex += 30
+            lastUserIndex += userPageSize
         
         } else if let users = dataSource.loadUsers() {
             usersArray = users
-            usersArray.count == 0 ? hideTableShowLabel() : tableView.reloadData()
-            hideLoadingView(tableView: tableView)
+            usersArray.count == 0 ? hideTableShowLabel() : tableView?.reloadData()
+            hideLoadingView()
         } else {
             hideTableShowLabel()
         }
     }
     
-    @objc func pop(_ sender: UIBarButtonItem) {
+    @objc private func pop(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)
     }
     
-    func hideTableShowLabel() {
-        UIView.animate(withDuration: 0.5, animations: {
-            self.noDataLabel.alpha = 1
-            self.tableView.alpha = 0
+    private func hideTableShowLabel() {
+        UIView.animate(withDuration: animationDuration, animations: {
+            self.noDataLabel?.alpha = 1
+            self.tableView?.alpha = 0
         })
     }
     
-    func showTableHideLabel() {
-        UIView.animate(withDuration: 0.5, animations: {
-            self.noDataLabel.alpha = 0
-            self.tableView.alpha = 1
+    private func showTableHideLabel() {
+        UIView.animate(withDuration: animationDuration, animations: {
+            self.noDataLabel?.alpha = 0
+            self.tableView?.alpha = 1
         })
+    }
+    
+    private func hideLoadingView() {
+        loadingView?.removeFromSuperview()
+        tableView?.refreshControl?.endRefreshing()
     }
 }
 
 extension UserListViewController: UITableViewDataSource {
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return usersArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: UserCell.identifier) as? UserCell {
-            cell.config(withUser: usersArray[indexPath.row])
-            return cell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: UserCell.identifier) as? UserCell else {
+            return UITableViewCell()
         }
-        return UITableViewCell()
+        
+        cell.config(withUser: usersArray[safe: indexPath.row])
+        return cell
     }
 }
 
@@ -97,7 +104,7 @@ extension UserListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let vc = storyboard?.instantiateViewController(withIdentifier: UserViewController.identifier) as? UserViewController {
-            vc.user = usersArray[indexPath.row]
+            vc.user = usersArray[safe: indexPath.row]
             navigationController?.pushViewController(vc, animated: true)
             tableView.deselectRow(at: indexPath, animated: true)
         }
@@ -115,11 +122,11 @@ extension UserListViewController: UserViewModelDelegate {
     func didReceiveUsersList(users: [User]) {
         usersArray.append(contentsOf: users)
         dataSource.saveUsers(users: usersArray)
-        hideLoadingView(tableView: tableView)
+        hideLoadingView()
     }
     
     func didFailDownloadUsersListWithError(error: Error) {
-        hideLoadingView(tableView: tableView)
+        hideLoadingView()
         showError(withMessage: "An error occured while downloading users list.")
         if usersArray.count == 0 {
             hideTableShowLabel()

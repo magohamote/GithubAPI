@@ -23,8 +23,11 @@ public class MockRequest {
     }
     
     public func responseJSON(options: JSONSerialization.ReadingOptions = .allowFragments, completionHandler: (NSURLRequest, HTTPURLResponse?, AnyObject?, NSError?) -> Void) -> Self {
+        guard let request = request, let requestURL = NSURL(string: request) else {
+            return self
+        }
         
-        completionHandler(NSURLRequest(url: NSURL(string: self.request!)! as URL), MockRequest.response.data, MockRequest.response.json, MockRequest.response.error)
+        completionHandler(NSURLRequest(url: requestURL as URL), MockRequest.response.data, MockRequest.response.json, MockRequest.response.error)
         return self
     }
 }

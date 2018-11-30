@@ -35,11 +35,13 @@ class MockService: Service {
             name = ""
         }
         
-        let data = getTestData(name: name)
+        guard let data = getTestData(name: name) else {
+            return
+        }
         MockRequest.response.data = htmlResponse
         
         do {
-            MockRequest.response.json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as AnyObject
+            MockRequest.response.json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as AnyObject
         } catch {
             completion(nil, FormatError.badFormatError)
             return
@@ -55,11 +57,14 @@ class MockService: Service {
     }
     
     override func requestUserFollowers(url: String, completion: @escaping (_ response: MultipleResult?, _ error: Error?) -> Void) {
-        let data = getTestData(name: url)
+        guard let data = getTestData(name: url) else {
+            return
+        }
+        
         MockRequest.response.data = htmlResponse
         
         do {
-            MockRequest.response.json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as AnyObject
+            MockRequest.response.json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as AnyObject
         } catch {
             completion(nil, FormatError.badFormatError)
             return
@@ -75,11 +80,14 @@ class MockService: Service {
     }
     
     override func requestUserRepos(url: String, completion: @escaping (_ response: MultipleResult?, _ error: Error?) -> Void) {
-        let data = getTestData(name: url)
+        guard let data = getTestData(name: url) else {
+            return
+        }
+        
         MockRequest.response.data = htmlResponse
         
         do {
-            MockRequest.response.json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as AnyObject
+            MockRequest.response.json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as AnyObject
         } catch {
             completion(nil, FormatError.badFormatError)
             return
@@ -95,11 +103,14 @@ class MockService: Service {
     }
     
     override func requestUserDetails(url: String, completion: @escaping (_ response: UniqueResult?, _ error: Error?) -> Void) {
-        let data = getTestData(name: url)
+        guard let data = getTestData(name: url) else {
+            return
+        }
+        
         MockRequest.response.data = htmlResponse
         
         do {
-            MockRequest.response.json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as AnyObject
+            MockRequest.response.json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as AnyObject
         } catch {
             completion(nil, FormatError.badFormatError)
             return
@@ -120,12 +131,19 @@ class MockService: Service {
         encoding: ParameterEncoding = URLEncoding.default,
         headers: HTTPHeaders? = nil) -> MockRequest {
         
-        return MockRequest(request: url as! String)
+        guard let url = url as? String else {
+            return MockRequest(request: "")
+        }
+        
+        return MockRequest(request: url)
     }
     
     private func getTestData(name: String) -> Data? {
         let testBundle = Bundle(for: type(of: self))
-        let path = testBundle.path(forResource: name, ofType: "json")
-        return try? Data(contentsOf: URL(fileURLWithPath: path!), options: .alwaysMapped)
+        guard let path = testBundle.path(forResource: name, ofType: "json") else {
+            return nil
+        }
+        
+        return try? Data(contentsOf: URL(fileURLWithPath: path), options: .alwaysMapped)
     }
 }

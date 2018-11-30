@@ -12,12 +12,12 @@ import Alamofire
 @testable import GitPatch
 
 class TestSaveAndLoadRepos: XCTestCase {
-    var repoViewModel: RepoViewModel!
+    var repoViewModel: RepoViewModel?
     
     override func setUp() {
         super.setUp()
         repoViewModel = RepoViewModel()
-        repoViewModel.service = MockService()
+        repoViewModel?.service = MockService()
     }
     
     override func tearDown() {
@@ -26,10 +26,12 @@ class TestSaveAndLoadRepos: XCTestCase {
     }
     
     func testSaveAndLoadRepos() {
-        let data = getTestData(name: "repos")
+        guard let data = getTestData(name: "repos") else {
+            return
+        }
         
         do {
-            if let reposJson = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [[String: Any]] {
+            if let reposJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [[String: Any]] {
                 var reposArrayToSave = [Repo]()
                 for repoJson in reposJson {
                     if let repo = Repo(withJson: repoJson) {
@@ -38,8 +40,8 @@ class TestSaveAndLoadRepos: XCTestCase {
                         XCTFail()
                     }
                 }
-                repoViewModel.saveRepos(forUserId: "test", repos: reposArrayToSave)
-                let loadedReposArray = repoViewModel.loadRepos(forUserId: "test")
+                repoViewModel?.saveRepos(forUserId: "test", repos: reposArrayToSave)
+                let loadedReposArray = repoViewModel?.loadRepos(forUserId: "test")
                 XCTAssertNotNil(loadedReposArray)
                 XCTAssertEqual(reposArrayToSave.count, loadedReposArray?.count)
                 XCTAssertEqual(reposArrayToSave[0].name, loadedReposArray?[0].name)
@@ -61,6 +63,6 @@ class TestSaveAndLoadRepos: XCTestCase {
     }
     
     func testFailLoadingRepos() {
-        XCTAssertNil(repoViewModel.loadRepos(forUserId: "this_path_doesn't_exist"))
+        XCTAssertNil(repoViewModel?.loadRepos(forUserId: "this_path_doesn't_exist"))
     }
 }

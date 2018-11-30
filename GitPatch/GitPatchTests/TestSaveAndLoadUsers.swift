@@ -12,12 +12,12 @@ import Alamofire
 @testable import GitPatch
 
 class TestSaveAndLoadUsers: XCTestCase {
-    var userViewModel: UserViewModel!
+    var userViewModel: UserViewModel?
     
     override func setUp() {
         super.setUp()
         userViewModel = UserViewModel()
-        userViewModel.service = MockService()
+        userViewModel?.service = MockService()
     }
     
     override func tearDown() {
@@ -26,10 +26,12 @@ class TestSaveAndLoadUsers: XCTestCase {
     }
     
     func testSaveAndLoadUsers() {
-        let data = getTestData(name: "users_list")
+        guard let data = getTestData(name: "users_list") else {
+            return
+        }
 
         do {
-            if let usersJson = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [[String: Any]] {
+            if let usersJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [[String: Any]] {
                 var usersArrayToSave = [User]()
                 for userJson in usersJson {
                     if let user = User(withJson: userJson) {
@@ -38,8 +40,8 @@ class TestSaveAndLoadUsers: XCTestCase {
                         XCTFail()
                     }
                 }
-                userViewModel.saveUsers(users: usersArrayToSave)
-                let loadedUsersArray = userViewModel.loadUsers()
+                userViewModel?.saveUsers(users: usersArrayToSave)
+                let loadedUsersArray = userViewModel?.loadUsers()
                 XCTAssertNotNil(loadedUsersArray)
                 XCTAssertEqual(usersArrayToSave.count, loadedUsersArray?.count)
                 XCTAssertEqual(usersArrayToSave[0].login, loadedUsersArray?[0].login)

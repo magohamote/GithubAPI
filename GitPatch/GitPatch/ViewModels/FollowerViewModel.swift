@@ -18,7 +18,7 @@ class FollowerViewModel {
     
     weak var delegate: FollowerViewModelDelegate?
     
-    internal var service = Service()
+    private var service = Service()
     
     func requestUserFollowers(url: String) {
         service.requestUserFollowers(url: url, completion: setUsersFollowers)

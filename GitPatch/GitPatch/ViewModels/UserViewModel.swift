@@ -18,7 +18,7 @@ class UserViewModel {
         
     weak var delegate: UserViewModelDelegate?
     
-    internal var service = Service()
+    private var service = Service()
     
     func requestUserList(since: Int) {
         service.requestUserList(since: since, completion: setUsersList)
@@ -56,7 +56,12 @@ class UserViewModel {
             } else {
                 data = try PropertyListEncoder().encode(users)
             }
-            let success = NSKeyedArchiver.archiveRootObject(data, toFile: User.ArchiveURL.path)
+            
+            guard let archiveURLPath = User.ArchiveURL?.path else {
+                return
+            }
+            
+            let success = NSKeyedArchiver.archiveRootObject(data, toFile: archiveURLPath)
             if success {
                 os_log("Users successfully saved.", log: OSLog.default, type: .debug)
             } else {
@@ -68,7 +73,10 @@ class UserViewModel {
     }
     
     func loadUsers() -> [User]? {
-        guard let data = NSKeyedUnarchiver.unarchiveObject(withFile: User.ArchiveURL.path) as? Data else { return nil }
+        guard let archiveURLPath = User.ArchiveURL?.path, let data = NSKeyedUnarchiver.unarchiveObject(withFile: archiveURLPath) as? Data else {
+            return nil
+        }
+        
         do {
             let users = try PropertyListDecoder().decode([User].self, from: data)
             os_log("Users successfully loaded.", log: OSLog.default, type: .debug)

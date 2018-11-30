@@ -15,10 +15,12 @@ class TestModels: XCTestCase {
     // MARK: - User Model
     
     func testSuccesfulUserJsonInit() {
-        let data = getTestData(name: "user_details")
+        guard let data = getTestData(name: "user_details") else {
+            return
+        }
         
         do {
-            let jsonData = try JSONSerialization.jsonObject(with: data!, options: []) as? [String : Any]
+            let jsonData = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
             XCTAssertNotNil(User(withJson: jsonData))
         } catch {
             XCTFail()
@@ -30,10 +32,12 @@ class TestModels: XCTestCase {
     }
     
     func testFailingUserJsonInit() {
-        let data = getTestData(name: "bad_user_details")
+        guard let data = getTestData(name: "bad_user_details") else {
+            return
+        }
         
         do {
-            let jsonData = try JSONSerialization.jsonObject(with: data!, options: []) as? [String : Any]
+            let jsonData = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
             XCTAssertNil(User(withJson: jsonData))
         } catch {
             XCTFail()
@@ -43,10 +47,12 @@ class TestModels: XCTestCase {
     // MARK: - Repo Model
     
     func testSuccesfulRepoJsonInit() {
-        let data = getTestData(name: "repo")
+        guard let data = getTestData(name: "repo") else {
+            return
+        }
         
         do {
-            let jsonData = try JSONSerialization.jsonObject(with: data!, options: []) as? [String : Any]
+            let jsonData = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
             XCTAssertNotNil(Repo(withJson: jsonData))
         } catch {
             XCTFail()
@@ -58,10 +64,12 @@ class TestModels: XCTestCase {
     }
     
     func testFailingRepoJsonInit() {
-        let data = getTestData(name: "bad_repo")
+        guard let data = getTestData(name: "bad_repo") else {
+            return
+        }
         
         do {
-            let jsonData = try JSONSerialization.jsonObject(with: data!, options: []) as? [String : Any]
+            let jsonData = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
             XCTAssertNil(Repo(withJson: jsonData))
         } catch {
             XCTFail()

@@ -18,7 +18,7 @@ class RepoViewModel {
     
     weak var delegate: RepoViewModelDelegate?
     
-    internal var service = Service()
+    private var service = Service()
     
     func requestUserRepos(url: String) {
         service.requestUserRepos(url: url, completion: setUserRepos)
@@ -57,8 +57,12 @@ class RepoViewModel {
                 data = try PropertyListEncoder().encode(repos)
             }
             
-            let archiveUrlString = "\(Repo.ArchiveURL.absoluteString)\(userId)" // add unique file path per user
-            let success = NSKeyedArchiver.archiveRootObject(data, toFile: URL(string: archiveUrlString)!.path)
+            guard let archiveURLAbsoluteString = Repo.ArchiveURL?.absoluteString,
+                let archiveURL = URL(string: "\(archiveURLAbsoluteString)\(userId)") else {
+                return
+            }
+            
+            let success = NSKeyedArchiver.archiveRootObject(data, toFile: archiveURL.path)
             if success {
                 os_log("User's repos successfully saved.", log: OSLog.default, type: .debug)
             } else {
@@ -70,8 +74,9 @@ class RepoViewModel {
     }
     
     func loadRepos(forUserId userId: String) -> [Repo]? {
-        let archiveUrlString = "\(Repo.ArchiveURL.absoluteString)\(userId)"
-        guard let data = NSKeyedUnarchiver.unarchiveObject(withFile: URL(string: archiveUrlString)!.path) as? Data else {
+        guard let archiveURLAbsoluteString = Repo.ArchiveURL?.absoluteString,
+            let archiveURL = URL(string: "\(archiveURLAbsoluteString)\(userId)"),
+            let data = NSKeyedUnarchiver.unarchiveObject(withFile: archiveURL.path) as? Data else {
             os_log("Failed to load user's repos.", log: OSLog.default, type: .error)
             return nil
         }

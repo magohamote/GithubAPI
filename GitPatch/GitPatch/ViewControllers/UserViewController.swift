@@ -10,7 +10,7 @@ import UIKit
 
 class UserViewController: UIViewController {
     
-    @IBOutlet var tableView: UITableView!
+    @IBOutlet private weak var tableView: UITableView?
     
     var user: User?
     
@@ -49,15 +49,15 @@ class UserViewController: UIViewController {
         }
     }
     
-    func setDs() {
-        tableView.delegate = self
-        tableView.dataSource = self
+    private func setDs() {
+        tableView?.delegate = self
+        tableView?.dataSource = self
         repoDataSource.delegate = self
         followerDataSource.delegate = self
         userDetailDataSource.delegate = self
     }
     
-    func downloadData(withUser user: User) {
+    private func downloadData(withUser user: User) {
         isDownloadingRepos = true
         isDownloadingFollowers = true
         repoDataSource.requestUserRepos(url: user.reposUrl)
@@ -65,11 +65,11 @@ class UserViewController: UIViewController {
         followerDataSource.requestUserFollowers(url: user.followersUrl)
     }
     
-    func updateSection(section: Int) {
+    private func updateSection(section: Int) {
         UIView.performWithoutAnimation {
-            self.tableView.beginUpdates()
-            self.tableView.reloadSections(IndexSet(integer: section), with: .automatic)
-            self.tableView.endUpdates()
+            self.tableView?.beginUpdates()
+            self.tableView?.reloadSections(IndexSet(integer: section), with: .automatic)
+            self.tableView?.endUpdates()
         }
     }
 }
@@ -131,7 +131,7 @@ extension UserViewController: UITableViewDataSource {
                 }
             } else {
                 if let cell = tableView.dequeueReusableCell(withIdentifier: RepoCell.identifier) as? RepoCell {
-                    cell.config(withRepo: reposArray[indexPath.row])
+                    cell.config(withRepo: reposArray[safe: indexPath.row])
                     return cell
                 }
             }
@@ -177,7 +177,7 @@ extension UserViewController: UITableViewDelegate {
         }
     }
     
-    func bigHeader(withTitle title: String) -> UITableViewHeaderFooterView {
+    private func bigHeader(withTitle title: String) -> UITableViewHeaderFooterView {
         let header = UITableViewHeaderFooterView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 70))
         return header.bigHeader(withTitle: title)
     }
@@ -190,7 +190,7 @@ extension UserViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserCollectionCell.identifier, for: indexPath) as? UserCollectionCell {
-            cell.config(withUser: followersArray[indexPath.row])
+            cell.config(withUser: followersArray[safe: indexPath.row])
             return cell
         }
         return UICollectionViewCell()
@@ -200,7 +200,7 @@ extension UserViewController: UICollectionViewDataSource {
 extension UserViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let vc = storyboard?.instantiateViewController(withIdentifier: UserViewController.identifier) as? UserViewController {
-            vc.user = followersArray[indexPath.row]
+            vc.user = followersArray[safe: indexPath.row]
             navigationController?.pushViewController(vc, animated: true)
         }
     }

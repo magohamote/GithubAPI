@@ -10,8 +10,8 @@ import Foundation
 
 struct Repo: Codable {
     
-    static let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
-    static let ArchiveURL = DocumentsDirectory.appendingPathComponent("repos")
+    static let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first
+    static let ArchiveURL = DocumentsDirectory?.appendingPathComponent("repos")
     
     var name: String
     var stargazersCount: Int

@@ -14,10 +14,10 @@ extension UIView {
         let yCoord = 4
         let radius = 8
         let dotPath = UIBezierPath(ovalIn: CGRect(x: xCoord, y: yCoord, width: radius, height: radius))
-        let layer = CAShapeLayer()
-        layer.path = dotPath.cgPath
-        layer.strokeColor = ConfigurationReader.sharedInstance.color(forKey: language).cgColor
-        layer.fillColor = ConfigurationReader.sharedInstance.color(forKey: language).cgColor
-        self.layer.addSublayer(layer)
+        let sublayer = CAShapeLayer()
+        sublayer.path = dotPath.cgPath
+        sublayer.strokeColor = ConfigurationReader.sharedInstance.color(forKey: language).cgColor
+        sublayer.fillColor = ConfigurationReader.sharedInstance.color(forKey: language).cgColor
+        layer.addSublayer(sublayer)
     }
 }

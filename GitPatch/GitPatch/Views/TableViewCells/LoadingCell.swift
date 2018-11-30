@@ -10,9 +10,9 @@ import UIKit
 
 class LoadingCell: UITableViewCell {
     
-    @IBOutlet var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet var activityIndicator: UIActivityIndicatorView?
     
     func config() {
-        activityIndicator.startAnimating()
+        activityIndicator?.startAnimating()
     }
 }
