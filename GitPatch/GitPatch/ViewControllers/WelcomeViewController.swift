@@ -14,9 +14,15 @@ class WelcomeViewController: UIViewController {
     @IBOutlet var swipeGestureRecognizer: UISwipeGestureRecognizer?
     @IBOutlet var welcomeLabel: UILabel?
     @IBOutlet var messageLabel: UILabel?
-    
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        setNeedsStatusBarAppearanceUpdate()
         
         startButton?.addTarget(self, action: #selector(start(_:)), for: .touchUpInside)
         swipeGestureRecognizer?.addTarget(self, action: #selector(start(_:)))
